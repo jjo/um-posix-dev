@@ -1,4 +1,4 @@
-/* $Id: hilos-3-condvars.c,v 1.3 2002/10/03 01:31:53 jjo Exp $ */
+/* $Id: hilos-3-condvars.c,v 1.4 2002/10/03 15:12:04 jjo Exp $ */
 /*
  * Objetivo: POSIX threads: Mostrar el uso de "condition variables" en 
  * Implementacion:
@@ -61,7 +61,7 @@ void *hilo_dispara(void *data)
 		cond_var++;
 		pthread_mutex_unlock(&cond_mutex);
 		pthread_cond_signal(&cond);
-		printf("TICK: cond_var=%d -> ", cond_var);
+		fprintf(stderr, "TICK: cond_var=%d -> ", cond_var);
 		usleep(PERIOD_usec);
 	}
 	return NULL;
@@ -75,11 +75,11 @@ void *hilo_espera(void *data)
 {
 	pthread_mutex_lock(&cond_mutex);
 	while (cond_var < 10) {
-		printf(".\n");
+		fprintf(stderr, ".\n");
 		pthread_cond_wait(&cond, &cond_mutex);
 	}
 	pthread_mutex_unlock(&cond_mutex);
-	printf("LISTO\n");
+	fprintf(stderr, "LISTO\n");
 	return NULL;
 }
 

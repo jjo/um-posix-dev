@@ -1,4 +1,4 @@
-/* $Id: hilos-4-socketcli.c,v 1.2 2002/10/03 01:31:53 jjo Exp $ */
+/* $Id: hilos-4-socketcli.c,v 1.3 2002/10/03 15:12:04 jjo Exp $ */
 /*
  * Objetivo: POSIX threads: cliente "telnet" MT
  * Implementacion:
@@ -34,6 +34,7 @@
 
 #define tostr(x) #x
 #define ERRSYS(call) do { if ( (call) < 0) { perror(tostr(call));exit(1); }} while (0)
+#define TIMEOUT_VAL 10
 int conecta_a(const char *str, unsigned port)
 {
 	int sockfd;
@@ -53,7 +54,6 @@ struct hilo_cond {
 	pthread_cond_t  cond;
 	int val;
 };
-#define HILO_COND_ZERO  { PTHREAD_MUTEX_INITIALIZER, PTHREAD_MUTEX_INITIALIZER, 0 }
 struct hilo_fildes {
 	int fd_in;
 	int fd_out;
@@ -74,7 +74,7 @@ int hilo_cond_delta(struct hilo_cond *hc, int delta)
 	val = hc->val + delta;
 	if (val<0) val=0;
 	hc->val = val;
-	printf("DELTA val=(%d)\n", hc->val);
+	/* fprintf(stderr, "DELTA val=(%d)\n", hc->val); */
 	pthread_mutex_unlock(&hc->mutex);
 	pthread_cond_signal(&hc->cond);
 	
@@ -82,12 +82,12 @@ int hilo_cond_delta(struct hilo_cond *hc, int delta)
 }
 int hilo_cond_waitfor(struct hilo_cond *hc, int val)
 {
+	fprintf(stderr, "ENTRO val=(%d,%d)\n", hc->val, val);
 	pthread_mutex_lock(&hc->mutex);
-	printf("ENTRO val=(%d,%d)\n", hc->val, val);
 	while (hc->val != val) 
 		pthread_cond_wait(&hc->cond, &hc->mutex);
 	pthread_mutex_unlock(&hc->mutex);
-	printf("SALIO val=(%d,%d)\n", hc->val, val);
+	fprintf(stderr, "SALIO val=(%d,%d)\n", hc->val, val);
 	return val;
 }
 void * hilo_fildes_copy(void *data)
@@ -95,12 +95,14 @@ void * hilo_fildes_copy(void *data)
 	struct hilo_fildes *hfd=data;
 	int nread;
 	char buf[1024];
-	printf("tid=%ld fd_int=%d fd_out=%d\n", pthread_self(), hfd->fd_in, hfd->fd_out);
+	fprintf(stderr, "tid=%ld fd_int=%d fd_out=%d\n", 
+			pthread_self(), hfd->fd_in, hfd->fd_out);
 	while ((nread=read(hfd->fd_in, buf, sizeof(buf)))>0) {
-		hilo_cond_set(hfd->cond, 5);
+		hilo_cond_set(hfd->cond, TIMEOUT_VAL);
 		write(hfd->fd_out, buf, nread);
 	}
-	printf("tid=%ld nread=%d\n", pthread_self(), nread);
+	fprintf(stderr, "tid=%ld nread=%d\n", 
+			pthread_self(), nread);
 	hilo_cond_set(hfd->cond, 0);
 	return NULL;
 }
@@ -108,8 +110,8 @@ void *hilo_ticks(void *data)
 {
 	struct hilo_cond *hc= data;
 	while(1) {
-		printf("*TICK.\n");
 		hilo_cond_delta(hc, -1);
+		fprintf(stderr, "%c\b", hc->val + '0');
 		sleep(1);
 	}
 	return NULL;
@@ -117,7 +119,7 @@ void *hilo_ticks(void *data)
 int main(int argc, const char *argv[]) {
 	int sockfd;
 	pthread_t tid_stdin_net, tid_net_stdout, tid_ticks;
-	struct hilo_cond cond; // = HILO_COND_ZERO;
+	struct hilo_cond cond;
 	struct hilo_fildes fildes_stdin_net = { STDIN_FILENO, -1, &cond };
 	struct hilo_fildes fildes_net_stdout= { -1, STDOUT_FILENO, &cond};
 
@@ -138,7 +140,7 @@ int main(int argc, const char *argv[]) {
 			hilo_fildes_copy, &fildes_net_stdout);
 	pthread_create(&tid_ticks, NULL,
 			hilo_ticks, &cond);
-	hilo_cond_set(&cond, 5);
+	hilo_cond_set(&cond, TIMEOUT_VAL);
 	hilo_cond_waitfor(&cond, 0);
 	return 0;
 }
