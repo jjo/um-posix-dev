@@ -1,5 +1,5 @@
 CFLAGS=-g -Wall
-TARGETS=test-signal-ign test-signal-catch test-signal-dfl test-signal+alarm
+TARGETS=test-signal-01-catch test-signal-02-ign test-signal-03-dfl test-signal-04-alarm test-signal-05-sigaction
 
 all: $(TARGETS)
 
