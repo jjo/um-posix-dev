@@ -2,8 +2,8 @@ DOXYGEN:=doxygen
 DOXYGEN_CFG:=../doxygen/doxygen.cfg
 dox: dox/html/index.html
 
-dox/html/index.html: *.c *.h $(DOXYGEN_CFG)
-	$(DOXYGEN) $(DOXYGEN_CFG)
+dox/html/index.html: *.c $(DOXYGEN_CFG) ../doxygen/Makefile.dox
+	dir=$${PWD##*/};sed "s|PROJECT_NAME.*=.*|PROJECT_NAME=\"$$dir\"|" $(DOXYGEN_CFG) |  $(DOXYGEN) -
 
 pdf: dox
 	$(MAKE) -C dox/latex
