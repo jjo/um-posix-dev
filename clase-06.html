@@ -1,0 +1,15 @@
+<html>
+<body>
+<h1> I/O bajo nivel </h1>
+<h2> <code>open()</code></h2>
+	<pre><code>
+       #include &lt;fcntl.h&gt;
+       int open(const char *pathname, int flags, mode_t mode);
+       </code></pre>
+       Donde <code>flags</code> es el OR entre:
+       <ul>
+	       <li>O_CREAT<br>
+	       crea el archivo si no existe, con el modo dado
+	       por <code>mode &amp; ~(umask)</code>
+</body>
+</html>

@@ -1,0 +1,19 @@
+<chapter id="api_unix_io_lowlevel">
+<title>UN*X API: I/O de bajo nivel</title>
+<para>Apertura de archivos: <function>open()</function></para>
+<para>
+<programlisting>
+#include &lt;stdio.h&gt;
+<function>int open(const char *<parameter>pathname</parameter>, int <parameter>flags</parameter>, mode_t <parameter>mode</parameter>);
+</function>
+</programlisting>
+</para>
+<para>donde
+<orderedlist> 
+<listitem>
+	<para>hola</para>
+</listitem>
+</orderedlist>
+</para>
+</chapter>
+

@@ -1,0 +1,27 @@
+<!-- vim:ts=2:sw=2
+-->
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook V4.1//EN" [
+<!--
+Uncomment line below to generate index.
+-->
+<!ENTITY chapIOlowlevel SYSTEM "chap_IO_lowlevel.sgml">
+]>
+<book>
+  <bookinfo> 
+    <title >Inform&aacute;tica III</title>
+    <subtitle>A&ntilde;o 2002</subtitle>
+    <author>
+      <firstname>JuanJo</firstname>
+      <surname>Ciarlante</surname>
+      <affiliation>
+		<address><email>jjo@um.edu.ar</email></address>
+      </affiliation>
+    </author>
+    <pubdate>May 2002</pubdate>
+    <abstract>
+      <para>Apuntes de la materia</para>
+      <para>Resumen de clases</para>
+    </abstract>
+  </bookinfo>
+	&chapIOlowlevel;
+</book>
