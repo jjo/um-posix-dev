@@ -1,10 +1,10 @@
 /* 
- * $Id: hilo-prodcons.c,v 1.2 2004/10/15 19:24:14 jjo Exp $
+ * $Id: hilo-prodcons.c,v 1.3 2004/10/15 19:50:25 jjo Exp $
  * Autor: JuanJo Ciarlante <jjo@um.edu.ar>
  * Licencia: GPLv2
  *
- * 1 producer: genera mensajes que se encolan en lalista (contienen un nro entero)
- * n consumers: sacan mensajes de lalista y lo procesan (muestra el nro contenido)
+ * 1 producer: genera mensajes que se encolan en LaLista (contienen un nro entero)
+ * n consumers: sacan mensajes de LaLista y lo procesan (muestra el nro contenido)
  *
  * el programa tiene una HORRIBLE race-condition...
  * ... porque?  `8)
@@ -16,7 +16,7 @@
 #include <pthread.h>
 
 #include "lista.h"
-struct lista lalista;
+struct lista *LaLista;
 void parse_args_or_die(int argc, const char *argv[], int *n_mensajes, int *n_consumers);
 void *consumer(void *);
 void *producer(void *);
@@ -27,7 +27,7 @@ int main(int argc, const char *argv[])
 	pthread_t tid_cons, tid_prod;
 
 	parse_args_or_die(argc, argv, &n_mensajes, &n_consumers);
-	lista_init(&lalista);
+	LaLista=lista_new(10);
 
 	for(i=1;i<=n_consumers;i++)
 		pthread_create(&tid_cons, NULL, consumer, (void*)i);
@@ -35,7 +35,8 @@ int main(int argc, const char *argv[])
 	pthread_create(&tid_prod, NULL, producer, (void*)n_mensajes);
 	pthread_join(tid_prod, NULL);
 
-	lista_destroy(&lalista);
+	//sleep(1); // truCHEx
+	lista_destroy(LaLista);
 	printf("Saliendo...\n");
 	return 0;
 }
@@ -48,7 +49,7 @@ void *producer(void *arg) {
 		m=malloc(sizeof *m);
 		mensaje_init(m);
 		m->num=i;
-		lista_put(&lalista, m);
+		lista_put(LaLista, m);
 	}
 	return NULL;
 }
@@ -60,7 +61,7 @@ void *consumer(void *arg) {
 	pthread_detach(pthread_self());
 	while(1) {
 		usleep(10);
-		m=lista_get(&lalista);
+		m=lista_get(LaLista);
 		if (!m) break;
 		cant=snprintf(buf, sizeof buf -1, "                consumer[%02u] num=%d\n", hilo_num, m->num);
 		
