@@ -69,7 +69,7 @@ void *consumer(void *arg) {
 				pthread_self(),
 				m->num);
 		
-		//nanosleep(&ts, NULL);
+		nanosleep(&ts, NULL);
 		write(STDOUT_FILENO, buf, cant);
 		free(m);
 	}

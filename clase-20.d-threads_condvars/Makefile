@@ -1,5 +1,5 @@
 CFLAGS=-g -Wall $(COPTS)
-TARGETS=hilo-prodcons-sem #hilo-prodcons-condvar
+TARGETS=hilo-prodcons-sem simple-trigger-condvar
 LDLIBS=-lpthread
 
 all: $(TARGETS) 
