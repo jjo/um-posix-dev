@@ -3,8 +3,12 @@ TARGET=test-open
 
 all: $(TARGET)
 
+test-open: test-open.o libopen.o
+	$(CC) $(LDFLAGS) -o $(@) $(^) $(LDLIBS)
+
+test: test1 test2 test3 test4 
 test1: test-open
-	./test-open 1 archivo1.txt
+	-./test-open 1 archivo1.txt
 
 test2: test-open
 	./test-open 2 archivo2.txt
