@@ -1,4 +1,4 @@
-/* $Id */
+/* $Id: test-shmsem-var.c,v 1.4 2002/06/21 12:56:14 jjo Exp $ */
 /*
  * Author: JuanJo Ciarlante <jjo@um.edu.ar>
  *
