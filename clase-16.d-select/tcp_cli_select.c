@@ -7,8 +7,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
-#define tostr(x) #x
-#define ERRSYS(call) do { if ( (call) < 0) { perror(tostr(call));exit(1); }} while (0)
+#define ERRSYS(call) do { if ( (call) < 0) { perror(#call);exit(1); }} while (0)
 int conecta_a(const char *str, unsigned port)
 {
 	int sockfd;
@@ -23,7 +22,7 @@ int conecta_a(const char *str, unsigned port)
 	ERRSYS( connect (sockfd, (struct sockaddr *)&s_in, sizeof(s_in)) );
 	return sockfd;
 }
-int main(void) {
+int main(int argc, const char *argv[]) {
 	int sockfd;
 	fd_set rfds, wfds, efds;
 	struct timeval tv; 
@@ -31,7 +30,11 @@ int main(void) {
 	int nread;
 	int nselect;
 
-	sockfd=conecta_a ("64.157.4.82", 25);
+	if (argc != 3) {
+		fprintf(stderr, "uso: %s IP.AD.DR.ES PORT\n", argv[0]);
+		return 255;
+	}
+	sockfd=conecta_a (argv[1], atoi(argv[2]));
 	while (1) {
 		/* setear los descriptores para CADA loop */
 		FD_ZERO(&rfds);

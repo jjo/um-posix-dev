@@ -8,8 +8,7 @@
 #include <arpa/inet.h>
 #include <string.h>
 #include <netdb.h>		/* resolucion de nombres */
-#define tostr(x) #x
-#define ERRSYS(call) do { if ( (call) < 0) { perror(tostr(call));exit(1); }} while (0)
+#define ERRSYS(call) do { if ( (call) < 0) { perror(#call);exit(1); }} while (0)
 /* emula inet_aton *pero* permitiendo resolver nombres -> ip*/
 int inet_aton_hname(const char *cp, struct in_addr *inp)
 {
@@ -62,7 +61,7 @@ int main(int argc, const char *argv[]) {
 	int nselect;
 
 	if (argc != 3) {
-		fprintf(stderr, "uso: %s IP.AD.DR.ES PORT\n", argv[0]);
+		fprintf(stderr, "uso: %s HOST PORT\n", argv[0]);
 		return 255;
 	}
 	sockfd=conecta_a (argv[1], atoi(argv[2]));

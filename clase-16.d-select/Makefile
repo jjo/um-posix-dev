@@ -1,5 +1,5 @@
 CFLAGS=-g -Wall $(COPTS)
-TARGETS=do_select do_select_hname
+TARGETS=tcp_cli_select tcp_cli_select_hname
 
 all: $(TARGETS) 
 
