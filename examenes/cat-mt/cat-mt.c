@@ -4,36 +4,36 @@
 
 #include "buflib.h"
 
-struct mibuf_t mibuffer;
+struct mibuf_t mibuf;
 void * lector(void *arg)
 {
 	char buffer[4096];
-	int nread;
-	while((nread=buf_read(&mibuffer, buffer, sizeof buffer))>=0) {
-		printf("READ\n");
-		write(1, buffer, nread);
+	int nbytes;
+	while((nbytes=buf_read(&mibuf, buffer, sizeof buffer))>=0) {
+		/* fprintf(stderr, "READ %d\n", nbytes); */
+		write(STDOUT_FILENO, buffer, nbytes);
+		if(nbytes==0) break;
 	}
-		printf("READ FIN\n");
+/* 	fprintf(stderr, "READ FIN\n"); */
 	return NULL;
 }
 void * escritor(void *arg)
 {
 	char buffer[4096];
-	int nread;
-	while((nread=read(0, buffer, sizeof buffer))>=0) {
-		buf_write(&mibuffer, buffer, nread);
-		printf("WRITE\n");
-		if(nread==0) break;
+	int nbytes;
+	while((nbytes=read(STDIN_FILENO, buffer, sizeof buffer))>=0) {
+		buf_write(&mibuf, buffer, nbytes);
+/* 		fprintf(stderr, "WRITE %d\n", nbytes); */
+		if(nbytes==0) break;
 	}
-	buf_close(&mibuffer);
-
-		printf("WRITE FIN\n");
+/* 	buf_close(&mibuf); */
+/* 	fprintf(stderr, "WRITE FIN\n"); */
 	return NULL;
 }
 pthread_t hilos[2];
 int main(void)
 {
-	buf_init(&mibuffer);
+	buf_init(&mibuf);
 	if (pthread_create(&hilos[0], NULL, lector, NULL))
 			perror("pthread_create()");
 	if (pthread_create(&hilos[1], NULL, escritor, NULL))

@@ -7,6 +7,6 @@ struct mibuf_t {
 };
 /* buflib.c */
 void buf_init(struct mibuf_t *buffer);
-size_t buf_read(struct mibuf_t *buffer, unsigned char *b, size_t len);
-size_t buf_write(struct mibuf_t *buffer, unsigned char *b, size_t len);
+ssize_t buf_read(struct mibuf_t *buffer, unsigned char *b, ssize_t len);
+ssize_t buf_write(struct mibuf_t *buffer, const unsigned char *b, ssize_t len);
 void buf_close(struct mibuf_t *mibuffer);
