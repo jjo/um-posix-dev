@@ -1,0 +1,14 @@
+DOXYGEN:=doxygen
+DOXYGEN_CFG:=../doxygen/doxygen.cfg
+dox: dox/html/index.html
+
+dox/html/index.html: *.c *.h $(DOXYGEN_CFG)
+	$(DOXYGEN) $(DOXYGEN_CFG)
+
+pdf: dox
+	$(MAKE) -C dox/latex
+	ls -al dox/latex/refman.pdf
+links-dox: dox
+	links dox/html/index.html
+clean-dox:
+	rm -rf dox
