@@ -1,5 +1,5 @@
 /* 
- * $Id: libjj_mutex.c,v 1.2 2003/10/30 21:07:39 jjo Exp $
+ * $Id: libjj_mutex.c,v 1.3 2003/10/30 22:01:48 jjo Exp $
  *
  * Author: JuanJo Ciarlante <jjo@um.edu.ar>
  * License: GPLv2
@@ -19,16 +19,16 @@
 
 void *jj_critic_new(void)
 {
-	pthread_mutex_t *lk=malloc(sizeof *lk);
+/*%%*/	pthread_mutex_t *lk=malloc(sizeof *lk);
 	if (!lk) return NULL;
-	pthread_mutex_init(lk, NULL);
+/*%%*/	pthread_mutex_init(lk, NULL);
 	return lk;
 }
 int jj_critic_on(void *lk)
 {
-	return pthread_mutex_lock((pthread_mutex_t*)lk);
+/*%%*/	return pthread_mutex_lock((pthread_mutex_t*)lk);
 }
 int jj_critic_off(void *lk)
 {
-	return pthread_mutex_unlock((pthread_mutex_t*)lk);
+/*%%*/	return pthread_mutex_unlock((pthread_mutex_t*)lk);
 }
