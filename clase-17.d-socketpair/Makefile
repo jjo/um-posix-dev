@@ -1,9 +1,10 @@
 CFLAGS=-g -Wall $(COPTS)
-TARGETS=socketpair
+TARGETS=socketcalc
+OBJS=main.o calc.o
 
 all: $(TARGETS) 
 
-socketpair: socketpair.o $(LIBS)
-	$(CC) $(LDFLAGS) -o $@ $^ $(LDLIBS) 
+socketcalc: $(OBJS)
+	$(CC) $(LDFLAGS) -o $@ $^ $(LDLIBS)
 clean:  
 	rm -f *.o *~ $(TARGETS) $(LIBS) core
