@@ -1,0 +1,122 @@
+/* Autor: Pablo Perotti */
+
+Las funciones getsockopt y setsockopt: (ver man setsockopt)
+-------------------------------------
+
+#include <sys/socket.h>
+
+int getsockopt(int sockfd, int level, int optname, 
+	void *optval, socklen_t *optlen);
+
+int setsockopt(int sockfd, int level, int optname,
+	const void *optval, socklen_t optlen);
+
+sockfd: representa un descriptor de socket abierto.
+level: 	especifica un codigo en el sistema para interpretar el resto de las 
+	opciones. 
+optname: representa la opcion a utilizar. (a traves de una constante o valor
+	 numerico. 
+optval: es un puntero a una variable utilizada para contener el valor de 
+	la nueva opcion al usar setsockopt o para almacenar el valor de la
+	opcion al invocar a getsockopt. 
+optlen: representa el tamaño de la variable anterior de forma de valor, para 
+	setsockopt o como valor-resultado (value-result) para getsockopt.
+
+Opciones Genericas de Socket: (/usr/include/asm/socket.h)
+----------------------------
+SO_BROADCAST:	Esta opcion activa o desactiva la habilidad de un proceso para 
+		mandar mensajes broadcast. Broadcasting esta soportado solo por
+		sockets de datagramas.
+
+SO_DEBUG:	Esta opcion esta solo soportada por TCP. Una vez que se la 
+		activa, el kernel mantiene informacion detallada sobre todos
+		los paquetes enviados y recibidos por TCP al socket.
+
+SO_DONTROUTE:	Esta opcion especifica a los paquetes salientes que pasen por
+		alto (bypass) los mecanismos normales de ruteo de los protocolos
+		inferiores. 
+		
+SO_ERROR:	Cuando un error ocurre en un socket, el modulo del protocolo
+		establece una variable llamada so_error para ese socket a uno 
+		de los valores UNIX EXXX. Esto se llama 'error pendiente' 
+		(pending error) para el socket. 
+		El proceso puede obtener el valor de so_error mandando la 
+		opcion SO_ERROR (mediante getsockopt) al descriptor de socket.
+		El valor retornado por getsockopt es el error pendiente para
+		el socket elegido. El valor de so_error es entonces cambiado
+		a 0 por el kernel. 
+		Si so_error es distinto de cero cuando el proceso llama a read
+		y no hay datos para retornar, read retorna -1 con errno=so_error
+		El valor de so_error es entonces puesto a 0. Si hay datos en la
+		cola del socket, los datos son retornados por read en lugar de
+		la condicion de error. 
+		Si so_error es distinto de cero cuando el proceso llama a write,
+		se devuelve -1 y errno=so_error. Luego so_error se cambia a 0.
+		Esta es una opcion que puede ser consultada, mediante 
+		getsockopt, pero no cambiada por setsockopt.
+
+SO_KEEPALIVE:	El proposito de esta opcion es detectar si el 'peer host' crash.
+		Si el 'peer process' se cae, su TCP enviara una indicacion de 
+		final de conexion (FIN) a traves de la conexion.
+		Esta opcion es normalmente usada por los servidores aunque los 
+		clientes tambien pueden usarla. Los servers utilizan esta opcion
+		ya que pasan la mayoria del tiempo bloqueados esperando por una
+		un pedido del cliente es decir, una conexion TCP. Si el cliente
+		se cae y no estas seteada esta opcion, el proceso server nunca 
+		se dara cuenta que el cliente no esta mas y se se quedara 
+		esperando por datos que nunca llegarán. 
+
+SO_LINGER:	Esta opcion especifica como la funcion close opera para un 
+		protocolo orientado a conexion (ej. TCP). Por defecto, la
+		funcion close retorna inmediatamente, pero si hay algun dato
+		todavia disponible en el buffer de envio del socket, se 
+		tratara de enviar antes de terminar la conexion.		
+
+SO_RCVBUF
+SO_SNDBUF:	Cada socket tiene un buffer de envio y otro de recepcion. 
+		Estas opciones permiten cambiar los tamaños por defectos de
+		los buffers mencionados. Los tamaños TCP por default pueden 
+		variar desde 1 hasta 15KB dependiendo de la implentacion. 
+
+SO_RCVLOWAT
+SO_SNDLOWAT:	Cada socket tiene una receive low-water mark y una send
+		low-water mark. Estas son usadas por la funcion select. Estas
+		2 opciones nos permiten cambiar ambas low-water marks.
+		La receive low-water mark es la cantidad de datos que debe 
+		haber en el buffer de recepcion del socket para que la funcion
+		select devuelva 'readable'. La send low-water mark, es la 
+		cantidad espacio disponible que debe existir en el buffer de 
+		envio del socket para que select devuelva 'writable'. Los 
+		valores por defecto de TCP sockets son 2KB. 
+
+SO_RCVTIMEO
+SO_SNDTIMEO:	Estas opciones permiten establecer una pausa (timeout) en el 
+		envio y recepcion del socket. 
+
+SO_REUSEADDR:	La opcion SO_REUSEADDR sirve para 4 propositos diferentes:
+		1) permite que un server comenzar y 'asociarse' (bind) ha un
+		puedo conocido incluso si ya hay conexiones previamente 
+		establecidas que usan el mismo puerto como puertos locales. 
+
+		2) permite que varias instancias del mismo server se inicien en
+		un mismo puerto mientras cada instancia se asocia a una IP local
+		diferente. (Caso de multiples HTTP servers usando la tecnica de
+		IP alias).
+
+		3) permite que un mismo proceso pueda asociar el mismo puerto
+		a multiples sockets mientras que cada llamada a bind 
+		especifique una direccion IP diferente.
+
+		4) permite duplicar completamente asociaciones (binds): una
+		asociacion de un direccion IP y puerto cuando la misma direccion
+		IP y el puerto estan ya asociados a otro socket.
+
+SO_TYPE:	Esta opcion retorna el tipo de socket. El valor retornado es un 
+		valor tal como SOCK_STREAM o SOCK_DGRAM. Estas opciones son 
+		tipicamente usadas un proceso que hereda un socket al iniciar.
+
+Ademas de las opciones de sockets genericas tambien existen opciones
+para IPv4, IPv6, ICMPv6 y TCP.
+
+Tambien se pueden cambiar opciones de un socket a traves de las funciones
+fnctl y ioctl. 
