@@ -1,3 +1,4 @@
+CC=gcc
 CFLAGS=-g -Wall
 TARGET=l1
 OBJS=lista1.o main.o
