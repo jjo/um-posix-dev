@@ -1,0 +1,52 @@
+<html>
+<body>
+<hr>
+<h1> I/O bajo nivel </h1>
+<h2> <code>open()</code></h2>
+	<pre><code>
+       #include &lt;fcntl.h&gt;
+       int open(const char *pathname, int flags, mode_t mode);
+       </code></pre>
+       Donde <code>flags</code> es el OR entre:
+       <ul>
+	       <li>Excluyentes: O_RDONLY(0), O_WRONLY(1), O_RDWR(2)
+	       <li>O_CREAT:
+	       crea el arch, usa 3er param.
+	       <li>O_EXCL:
+	       ok la creación sólo si no existe, ojo uso para locking 
+	       (ver man 2 open)
+	       <li>O_NOCTTY: 
+	       evita tomar la tty como terminal de control
+	       <li>O_TRUNC:
+	       trunca al abrirlo (si O_RDWR ó O_WRONLY)
+	       <li>O_APPEND:
+	       el kernel _siempre_ posiciona el offset
+	       el final del archivo (atómico)
+	       <li>O_NONBLOCK:
+	       abre en modo no bloqueante y lo deja así 
+	       para sucesivas operaciones
+	       <li>O_SYNC:
+	       las escrituras (write() ) son "físicamente" 
+	       síncronas
+	       <li>O_NOFOLLOW:
+	       falla si el archivo es un link simbólico
+	       <li>O_DIRECTORY:
+	       ok sólo si es directorio
+	       <li>O_LARGEFILE
+	       permite uso de Large File System en sistemas
+	       de 32 bits.
+       </ul>
+       <h2> <code>read()</code></h2>
+       <p> Retorna:
+       <ul>
+	       <li> nread &gt;0  cant. de bytes leídos
+	       <li> nread == 0 EOF
+	       <li> nread &lt;0  error (ver errno)
+       </ul>
+       <h2> <code>write()</code></h2>
+       <p> Retorna cant de bytes escritos, ojo debería ser
+       siempre igual a buff_len.
+       <h2> <code>dup() y dup2()</code></h2>
+       <h2> <code>dup() y dup2()</code></h2>
+</body>
+</html>
