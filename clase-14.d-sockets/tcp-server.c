@@ -6,36 +6,8 @@
 #include <unistd.h>
 #include <signal.h>
 
-#define tostr(x) #x
-#define ERRSYS(call) do { if ( (call) < 0) { perror(tostr(call));exit(1); }} while (0)
+void servicio(int fd);
 
-void servicio(int fd) {
-	const char *array[] = { "TRES\n", "DOS\n", "UNO\n", "b00M!\n", NULL };
-	const char **strp=array;
-	char buf[1024];
-	char *str=buf;
-	FILE *f;
-
-	if ( (f=fdopen(fd, "r+")) == NULL ) {
-		perror("fdopen()");
-		exit(1);
-	}
-	fprintf(f,"Hola, aqui %s ...\ntipea y termina con 2 <Enters>\n",
-			getlogin());
-	fflush(f);
-	while(fgets(str, sizeof(buf)-(str-buf), f)) {
-		if (str[0]=='\r' || str[0]=='\n') break;
-		str+=strlen(str);
-	}
-	setbuf(f, NULL);
-	fprintf(f,"STR=%s\n", buf);
-	for(;*strp;strp++) {
-		fputs(*strp, f);
-		usleep(400000);
-	}
-	fclose(f);
-	close(fd);
-}
 int main(int argc, const char *argv[])
 {
 	int sockfd, servfd;
@@ -56,7 +28,9 @@ int main(int argc, const char *argv[])
 	/* 
 	 * socket(): Creo el socket ... 
 	 */
-	ERRSYS(sockfd=socket(PF_INET, SOCK_STREAM, 0));
+	if(( sockfd=socket(PF_INET, SOCK_STREAM, 0))<0) {
+		perror("socket()");return 1;
+	}
 	
 	/* 
 	 * preparo el addr:port para donde esperar conns 
@@ -70,17 +44,23 @@ int main(int argc, const char *argv[])
 	 * Por si quedo' semi-cerrado recie'n: fuerzo reuso
 	 */
 	opt = 1;
-	ERRSYS(setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, (char *) &opt, sizeof(opt)));
+	if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, (char *) &opt, sizeof(opt))<0) {
+		perror("setsockopt()");return 1;
+	}
 
 	/* 
 	 * bind(): me ligo a un address:port 
 	 */
-	ERRSYS (bind (sockfd, (struct sockaddr *)&addr_in, 
-				sizeof(struct sockaddr_in)) );
+	if (bind (sockfd, (struct sockaddr *)&addr_in, 
+				sizeof(struct sockaddr_in))<0) {
+		perror("bind()");return 1;
+	}
 	/* 
 	 * listen(): Permito hasta 20 conexiones pendientes
 	 */
-	ERRSYS (listen(sockfd, 20));
+	if ((listen(sockfd, 20))<0) {
+		perror("listen()");return 1;
+	}
 
 	/* 
 	 * no me interesa el exit_value de mis hijos (evito
@@ -110,4 +90,32 @@ int main(int argc, const char *argv[])
 		}
 	}
 	return 0;
+}
+
+void servicio(int fd) {
+	const char *array[] = { "TRES\n", "DOS\n", "UNO\n", "b00M!\n", NULL };
+	const char **strp=array;
+	char buf[1024];
+	char *str=buf;
+	FILE *f;
+
+	if ( (f=fdopen(fd, "r+")) == NULL ) {
+		perror("fdopen()");
+		exit(1);
+	}
+	fprintf(f,"Hola, aqui %s ...\ntipea y termina con 2 <Enters>\n",
+			getlogin());
+	fflush(f);
+	while(fgets(str, sizeof(buf)-(str-buf), f)) {
+		if (str[0]=='\r' || str[0]=='\n') break;
+		str+=strlen(str);
+	}
+	setbuf(f, NULL);
+	fprintf(f,"STR=%s\n", buf);
+	for(;*strp;strp++) {
+		fputs(*strp, f);
+		usleep(400000);
+	}
+	fclose(f);
+	close(fd);
 }
