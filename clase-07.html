@@ -3,3 +3,48 @@
 <body>
 <hr>
 <h1> Procesos </h1>
+<h2> <code>fork(), vfork()</code>
+	<ul>
+	<li>File sharing: fd comparte fileoffset
+	<li>comparten:
+		<ul>
+		<li> open files
+		<li> IDs: uid, euid, gid, egid
+		<li> PGID, SID
+		<li> controlling tty
+		<li> suid, sgid flags
+		<li> cwd
+		<li> umask
+		<li> signal mask
+		<li> env
+		<li> attached shmem
+		<li> rsource limits
+		</ul>
+	<li> no comparten:
+		<ul>
+		<li> fork return val
+		<li> PID, PPID
+		<li> tms_{u,s,cu}time
+		<li> locks (file)
+		<li> alarms cleared
+		<li> _pending_ signals -> empty set
+	</ul>
+	<p> vfork(): pensado para exec*() , mismo espacio de mem
+<h2> <code> exit() </code></h2>
+<h2> <code> wait(), waitpid() </code></h2>
+	<ul>
+	<li> wait(&amp;status);
+	<li> waitpid(-1, &amp;status, 0);
+	</ul>
+	<p> status:
+		<ul>
+		<li> WIFEXITED(status) -&gt; WEXITSTATUS(status)
+		<li> WIFSIGNALED(status) -&gt; WTERMSIG(status)
+		 o' -&gt; WCOREDUMP(status)
+		</ul>
+<h2> <code> exec() </code></h2>
+syscall: execve()<br>
+l: lista, v: array<br>
+p: path
+l: lista, v: array<br>
+
