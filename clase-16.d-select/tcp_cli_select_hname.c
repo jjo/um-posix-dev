@@ -9,28 +9,26 @@
 #include <string.h>
 #include <netdb.h>		/* resolucion de nombres */
 #define ERRSYS(call) do { if ( (call) < 0) { perror(#call);exit(1); }} while (0)
+
+int fprintf_ip(FILE *f, struct sockaddr_in *addr_in) {
+	char ip_buf[INET_ADDRSTRLEN];
+	inet_ntop(AF_INET, (void*)&(addr_in->sin_addr), ip_buf, sizeof(ip_buf));
+	return fprintf(stderr, "IP=%s\n", ip_buf);
+}
 /* emula inet_aton *pero* permitiendo resolver nombres -> ip*/
 int inet_aton_hname(const char *cp, struct in_addr *inp)
 {
 
-	struct hostent *hent;
-	char **pptr;
-	char ip_buf[INET_ADDRSTRLEN];
-	if ((hent=gethostbyname(cp))) {
-		switch (hent->h_addrtype) {
-			case AF_INET:
-				pptr=hent->h_addr_list;			
-				/* en realidad, h_length es SIEMPRE 4 para AF_INET */
-				if (pptr[0]) {
-					inet_ntop(AF_INET, pptr[0], ip_buf, sizeof(ip_buf));
-					fprintf(stderr, "resolucion OK, IP=%s\n", ip_buf);
-					memcpy(inp, pptr[0], hent->h_length);
-				}
-				return 1;
-			default:
-				fprintf(stderr, "la direccion se resolvio a otra familia de protocolos (%d)\n", hent->h_addrtype);
-				return 0;
-		}
+	const struct addrinfo hint = 
+		{ .ai_flags=0, .ai_family=AF_INET, .ai_socktype=0, .ai_protocol=0 };
+	struct addrinfo *addrinfo_p;
+
+	/* Usamos getaddrinfo en vez del (obsoleto) gethostbyname */
+	if ((getaddrinfo(cp, NULL, &hint, &addrinfo_p))==0) {
+		struct sockaddr_in *addr_in=(struct sockaddr_in*)addrinfo_p->ai_addr;
+		memcpy(inp, &addr_in->sin_addr, sizeof (addr_in->sin_addr));
+
+		return 1;
 	} else {
 		fprintf(stderr, "error en gethostbyname(\"%s\"): %s\n",
 				cp,
