@@ -1,4 +1,4 @@
-/* $Id: ipclib.c,v 1.3 2002/06/21 18:40:41 jjo Exp $ */
+/* $Id: ipclib.c,v 1.4 2003/06/13 21:19:13 jjo Exp $ */
 /*
  * Author: JuanJo Ciarlante <jjo@um.edu.ar>
  *
@@ -21,8 +21,10 @@
 #include <string.h>
 
 #include "ipclib.h"
-#define SEM_MAX 10
-/* crear un area de memoria compartida */
+
+/* 
+ * Crea un area de memoria compartida 
+ */
 void *shm_create(key_t key, size_t size, int getflags, int atflags)
 {
 	int shm_id;
@@ -34,31 +36,53 @@ void *shm_create(key_t key, size_t size, int getflags, int atflags)
 	return ptr;
 }
 
-int sema_create(key_t key, size_t n_sems, int getflags)
+/* 
+ * Crea e inicializa un set de mi_semaforos
+ */ 
+int mi_sema_create(key_t key, size_t n_sems, int getflags)
 {
 	int sem_id;
-	unsigned short vals[SEM_MAX];
-	union semun arg;
+	const char *ouch="";
+	union semun semctl_arg;
+	/* typeof es una extension de GCC ... muy co'moda x cierto :) */
+	typeof(semctl_arg.array) valores=NULL;
 
-	if(n_sems>=SEM_MAX) {
-		fprintf(stderr, "ERROR: n_sems=%d>SEM_MAX\n",
-				n_sems);
-		return -1;
-	}
+	/* contendra' los valores para c/mi_semaforo */
+	valores=malloc(n_sems * sizeof *valores);
+	if (!valores)    { ouch="malloc()"; goto err; }
+
 	sem_id=semget(key, n_sems, getflags);
-	if (sem_id ==-1) { perror ("semget"); return -1;}
-	/* reset */
-	memset(vals, 0, sizeof(vals));
-	arg.array=vals;
-	semctl(sem_id,n_sems,SETALL,arg);
+	if (sem_id ==-1) { ouch="semget()"; goto err; }
+
+	/* pongo todos los valores en 0 */
+	memset(valores, 0, sizeof(valores));
+	
+	/* preparo el argumento para semctl */
+	semctl_arg.array=valores;
+
+	/* inicializacion del set */
+	if (semctl(sem_id, n_sems, SETALL, semctl_arg)==-1) 
+	{ ouch="semctl()"; goto err; }
+
+	free(valores);
 	return sem_id;
+err:
+	if (valores) free (valores);
+	perror(ouch);
+	return -1;
 }
-int sema_up_flg(int sem_id, int sem_num, int delta, int flg)
+/* 
+ * Hace una operacion sobre el mi_semaforo numero sem_num 
+ * para
+ * 	delta=1  -> UP
+ * 	delta=-1 -> DOWN
+ */
+int mi_sema_up_flags(int sem_id, int sem_num, int delta, int flags)
 {
 	struct sembuf semops[1];
 	semops[0].sem_num=sem_num;
 	semops[0].sem_op=delta;
-	semops[0].sem_flg=flg;
+	semops[0].sem_flg=flags;
 	
 	return semop(sem_id, semops, 1);
 }
