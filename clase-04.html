@@ -1,15 +1,50 @@
-<html>
-<head><title>Inform&aacute;tica III - Clase 3</title></head>
-<body>
-<hr>
-<h1>Mapa de memoria de aplicaci&oacute;n</h1>
-	<ul>
-	<li>cat /proc/self/maps
-	<li>cat /proc/self/status
-	<li>Areas de memoria en linux  0-0xc000000, 0xc0000000-...
-	<li>C y la memoria: stack (local), global/static y din&aacute;mica
-
-<hr>
-<h1>Correcci&oacute;n del TP1</h1>
-</body>
-</html>
+<table>
+<tr>
+<th>-</th><th>STDLIB</th><th>lowlevel I/O</th>
+</tr>
+<tr>
+	<td>abrir</td>
+	<td>FILE *file=fopen("arch","rw")</td>
+	<td>int fd=open("arch", O_RDWR|O_CREATE, 0666)</td>
+</tr>
+<tr>
+	<td>leer</td>
+	<td>fread(..., file)</td>
+	<td>read(fd, ...)</td>
+</tr>
+<tr>
+	<td>escribir</td>
+	<td>fwrite(..., file)</td>
+	<td>write(fd, ...)</td>
+</tr>
+<tr>
+	<td>cerrar</td>
+	<td>fclose(file)</td>
+	<td>close(fd)</td>
+</tr>
+<tr>
+	<td>mostrar err.</td>
+	<td>perror("...")</td>
+	<td>perror("...")</td>
+</tr>
+<tr>
+	<td>leer c/formato</td>
+	<td>scanf(file, ...)</td>
+	<td> N/A </td>
+</tr>
+<tr>
+	<td>escribir c/formato</td>
+	<td>fprintf(file, ...)</td>
+	<td> N/A </td>
+</tr>
+</table>
+	ej. de open:
+<pre>
+		O_RDWR solamente: no lo crea
+		O_RDWR | O_CREATE, 0: permisos ?
+		O_RDWR | O_CREATE, 0666: umask
+		O_RDWR | O_CREATE, 0666: no trunca (escribir menos que la vez anterior)
+		O_RDWR | O_CREATE | O_TRUNCATE
+		
+</pre>
+	introducci&oacute;n a fork()
