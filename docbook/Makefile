@@ -19,11 +19,11 @@ CATALOG:=/usr/share/sgml/docbook/sgml-dtd-4.1/catalog
 #CATALOG:=/usr/share/sgml/docbook/xml-dtd-4.1.2/catalog
 OPENJADE=jade -c $(CATALOG)
 
-#JADEPRINT=$(OPENJADE) -D $(DPATH_PRINT) -d /usr/share/sgml/docbook/dsssl-stylesheets-cygnus/stylesheets/cygnus-both.dsl\#print
-JADEPRINT=$(OPENJADE) -D $(DPATH_PRINT) -d d1.dsl
+JADEPRINT=$(OPENJADE) -D $(DPATH_PRINT) -d /usr/share/sgml/docbook/dsssl-stylesheets-cygnus/stylesheets/cygnus-both.dsl\#print
+#JADEPRINT=$(OPENJADE) -D $(DPATH_PRINT) -d d1.dsl
 
-#JADEHTML=$(OPENJADE) -D $(DPATH_HTML) -t sgml -ihtml -d /usr/share/sgml/docbook/dsssl-stylesheets-cygnus/stylesheets/cygnus-both.dsl\#html
-JADEHTML=$(OPENJADE) -D $(DPATH_HTML) -t sgml -i html -d d1.dsl
+JADEHTML=$(OPENJADE) -D $(DPATH_HTML) -t sgml -ihtml -d /usr/share/sgml/docbook/dsssl-stylesheets-cygnus/stylesheets/cygnus-both.dsl\#html
+#JADEHTML=$(OPENJADE) -D $(DPATH_HTML) -t sgml -i html -d d1.dsl
 
 #SGML2HTML=sgml2html $(SGML_OPT) -s 0
 
