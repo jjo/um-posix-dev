@@ -1,5 +1,5 @@
 /*
- * $Id: holamundo.c,v 1.1 2003/03/24 13:21:50 jjo Exp $
+ * $Id: holamundo.c,v 1.2 2004/03/12 17:42:25 jjo Exp $
  */
 
 #include <unistd.h>
@@ -12,7 +12,7 @@
  * De allí que "main" devuelva un entero.
  */
 #define HOLAMUNDO "Hola mundo\n"
-#define WARISSHIT "la guerra ES el standard error :/ \n"
+#define ERRHOLA "ERROR: el mundo no responde\n"
 
 /* 
  * 	Hacemos llamadas de bajo nivel (syscall al S.O.)
@@ -22,7 +22,7 @@
  */
 int main(void)
 {
-	write(STDOUT_FILENO, HOLAMUNDO, strlen(HOLAMUNDO)); 
-	write(STDERR_FILENO, WARISSHIT, strlen(WARISSHIT));
+	write(1, HOLAMUNDO, strlen(HOLAMUNDO)); 
+	write(2, ERRHOLA, strlen(ERRHOLA));
 	return 0;
 }

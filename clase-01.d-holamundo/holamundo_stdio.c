@@ -1,5 +1,5 @@
 /*
- * $Id: holamundo_stdio.c,v 1.2 2003/03/24 13:21:50 jjo Exp $
+ * $Id: holamundo_stdio.c,v 1.3 2004/03/12 17:42:25 jjo Exp $
  */
 
 #include <stdio.h>
@@ -12,7 +12,8 @@
  * De allí que "main" devuelva un entero.
  */
 #define HOLAMUNDO "Hola mundo\n"
-#define WARISSHIT "la guerra ES el standard error :/ \n"
+#define ERRHOLA "ERROR: el mundo no responde\n"
+
 /* 
  * 	Usamos la biblioteca standard de I/O (stdio)
  * 
@@ -21,6 +22,6 @@
 int main(void)
 {
 	printf(HOLAMUNDO);
-	fprintf(stderr, WARISSHIT);
+	fprintf(stderr, ERRHOLA);
 	return 0;
 }
