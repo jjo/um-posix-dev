@@ -1,3 +1,11 @@
+/*
+ * $Id: lista-sem.c,v 1.2 2004/10/15 19:24:14 jjo Exp $
+ * Autor: JuanJo Ciarlante <jjo@um.edu.ar>
+ * Licencia: GPLv2
+ *
+ * Lista (cola) sincronizada por semaforo (si lista vacía)
+ */
+
 #include <glib.h>
 #include "lista.h"
 #include <assert.h>

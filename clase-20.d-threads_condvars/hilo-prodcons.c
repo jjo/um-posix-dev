@@ -1,4 +1,8 @@
 /* 
+ * $Id: hilo-prodcons.c,v 1.2 2004/10/15 19:24:14 jjo Exp $
+ * Autor: JuanJo Ciarlante <jjo@um.edu.ar>
+ * Licencia: GPLv2
+ *
  * 1 producer: genera mensajes que se encolan en lalista (contienen un nro entero)
  * n consumers: sacan mensajes de lalista y lo procesan (muestra el nro contenido)
  *
