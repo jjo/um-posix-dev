@@ -1,3 +1,20 @@
+/* $Id: hilos-3-condvars.c,v 1.2 2002/09/30 14:10:59 jjo Exp $ */
+/*
+ * Objetivo: POSIX threads: Mostrar el uso de "condition variables" en 
+ * 
+ * Author: JuanJo Ciarlante <jjo@um.edu.ar>
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation; either version 2 of the License, or (at your
+ * option) any later version.  See <http://www.fsf.org/copyleft/gpl.txt>.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * for more details.
+ */
+
 #include <stdio.h>
 #include <unistd.h>
 #include <sys/types.h>
@@ -6,38 +23,70 @@
 
 #include <pthread.h>
 
-pthread_mutex_t mut = PTHREAD_MUTEX_INITIALIZER;
+/*
+ * 	la "condition variables" son una _generalización_ de los
+ * 	semáforos: es posible espera CUALQUIER CONDICIóN (y no 
+ * 	solamente que el valor del semáforo V>0).
+ * 	Constan de 2 elementos:
+ * 	- pthread_cont_t cond    
+ * 	   provee "señalización" vía primitivas sleep/wakeup:
+ * 	      pthread_cond_wait(&c, &m):  "sleep"
+ * 	      pthread_cond_signal(&c):    "wakeup"
+ * 	      
+ * 	- pthread_mutex_t cond_mutex  
+ * 	   mutex utilizado para proveer exclusión mutua durante
+ * 	   la evaluación/señalización de la condición.
+ */
 pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
+pthread_mutex_t cond_mutex = PTHREAD_MUTEX_INITIALIZER;
+/* 	
+ * 	En realidad, _cualquier_ condición es posible,
+ * 	en este caso simplemente una variable
+ */
+int cond_var=0;
 
-int x=0;
-
-void *h2(void *data)
+/*
+ * El thread asociado a esta función tiene como misión "disparar"
+ * (pthread_cond_signal) periódicamente 
+ */
+#define PERIOD_usec	1000000/5
+void *hilo_dispara(void *data)
 {
 	while(1) {
-		pthread_mutex_lock(&mut);
-		x++;
-		pthread_mutex_unlock(&mut);
+		pthread_mutex_lock(&cond_mutex);
+		cond_var++;
+		pthread_mutex_unlock(&cond_mutex);
 		pthread_cond_signal(&cond);
-		printf("x=%d\n", x);
-		usleep(1000000/5);
+		printf("TICK: cond_var=%d -> ", cond_var);
+		usleep(PERIOD_usec);
 	}
 	return NULL;
 }
 
-void *h1(void *data)
+/*
+ * El thread asociado a esta función tiene como misión "esperar"
+ * la condición, en este caso un determinado valor de "cond_var"
+ */
+void *hilo_espera(void *data)
 {
-	pthread_mutex_lock(&mut);
-	while (x <= 10) {
+	pthread_mutex_lock(&cond_mutex);
+	while (cond_var < 10) {
 		printf(".\n");
-		pthread_cond_wait(&cond, &mut);
+		pthread_cond_wait(&cond, &cond_mutex);
 	}
-	pthread_mutex_unlock(&mut);
+	pthread_mutex_unlock(&cond_mutex);
+	printf("LISTO\n");
 	return NULL;
 }
+
 int main(void) {
-	pthread_t tid[2];
-	pthread_create ( &tid[0], NULL, h1, NULL);
-	pthread_create ( &tid[1], NULL, h2, NULL);
-	pthread_join ( tid[0], NULL);
+	pthread_t tid_espera, tid_dispara;	/* IDs de threads */
+	/*	Creación de threads:
+	 *	- hilo_espera: el que espera la condición (esperando señal)
+	 *	- hilo_dispara: el que cambia la condición y señaliza 
+	 */
+	pthread_create ( &tid_espera, NULL, hilo_espera, NULL);
+	pthread_create ( &tid_dispara, NULL, hilo_dispara, NULL);
+	pthread_join ( tid_espera, NULL);
 	return 0;
 }
