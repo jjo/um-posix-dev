@@ -1,9 +1,12 @@
 CFLAGS=-Wall -g
-TARGET=test-fork-n-exec
+TARGET=test-fork-n-exec test-fork-n-exec-fd
 
 all: $(TARGET)
 
-$(TARGET): $(TARGET).o
+test-fork-n-exec: test-fork-n-exec.o
+	$(CC) $(LDFLAGS) -o $(@) $(^) $(LDLIBS)
+
+test-fork-n-exec-fd: test-fork-n-exec-fd.o
 	$(CC) $(LDFLAGS) -o $(@) $(^) $(LDLIBS)
 
 

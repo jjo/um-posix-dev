@@ -7,4 +7,4 @@ $(TARGET): $(TARGET).o
 	$(CC) -o $@ $^
 
 clean:  
-	rm -f *.o *~ $(TARGET) core
+	rm -f *.o *~ $(TARGET) core salida.txt
