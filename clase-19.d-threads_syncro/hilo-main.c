@@ -1,5 +1,5 @@
 /* 
- * $Id: hilo-main.c,v 1.3 2003/10/30 22:01:48 jjo Exp $
+ * $Id: hilo-main.c,v 1.4 2004/10/01 20:37:27 jjo Exp $
  *
  * Author: JuanJo Ciarlante <jjo@um.edu.ar>
  * License: GPLv2
@@ -24,7 +24,7 @@
 #include <pthread.h>
 #include "libjj.h"
 
-#define MAX_HILOS 100
+#define MAX_HILOS 1000
 #define min(a,b) ((a)<=(b)? (a) : (b))
 
 struct var_protegida {
@@ -44,13 +44,13 @@ int main(int argc , char *argv[])
 
 	/* procesado de argumentos de linea de comando */
 	if (argc!=3) {
-		fprintf(stderr, "uso: %s <n_loops> <n_hilos>\n"
-				" ej; %s 1000 20\n",
+		fprintf(stderr, "uso: %s <n_hilos> <n_loops>\n"
+				" ej; %s 20 1000\n",
 				argv[0], argv[0]);
 		return 1;
 	}
-	n_loops=atoi(argv[1]);
-	n_hilos=atoi(argv[2]);
+	n_hilos=atoi(argv[1]);
+	n_loops=atoi(argv[2]);
 	n_hilos=min(n_hilos, MAX_HILOS);
 
 	/* setup de la variable protegida: valor y lock */
