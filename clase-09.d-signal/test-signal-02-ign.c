@@ -5,6 +5,6 @@
 int main(void) 
 {
 	signal(SIGINT, SIG_IGN);
-	pause();
+	getchar();
 	return 0;
 }
