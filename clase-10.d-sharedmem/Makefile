@@ -1,3 +1,4 @@
+CC=gcc
 CFLAGS=-g -Wall
 TARGETS=test-shm-write test-shm-read
 
