@@ -1,0 +1,6 @@
+var1 = valor.1  #un comentario ...
+  #var1= ...   linea a ignorar
+var2=valor.2#  #ojo: como el '#' esta' pegado, forma parte del string
+var2=valor.2 #ahora si, comentario; prox. linea en blanco
+
+  var3   =   value.3 otras palabras luego ... # un comentario ...
