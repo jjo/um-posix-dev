@@ -1,4 +1,4 @@
-/* $Id: hilos-2-sem.c,v 1.1 2004/10/01 20:06:35 jjo Exp $ */
+/* $Id: hilos-2-sem.c,v 1.2 2004/10/01 22:05:14 jjo Exp $ */
 /*
  * Author: JuanJo Ciarlante <jjo@um.edu.ar>
  *
@@ -22,23 +22,26 @@
 #include <pthread.h>
 #include <semaphore.h>
 
+/* variable global "sincronizada" */
+struct {
+	int entero;
+	sem_t semaforo;
+} LA_Variable;
+
 void usage(int, int);
 #define MAX_HILOS 100
+const char *nombre_prog;
 /*
  * do_sync indica si se usara'n primitivas de sync 
  * para acceso a la variable global 
  */
 int do_sync=1;
 
-int elentero;
-const char *nombre_prog;
-
 /* DATA para la funcion del thread */
 struct hilo_arg {
 	int num;
 	int n_iter;
 	sem_t *sem_arranquep;
-	sem_t *sem_varp;
 };
 
 /* FUNCION del thread */
@@ -55,15 +58,15 @@ void * hilo(void *arg)
 	}
 	for (i=0;i<ha->n_iter;i++) {
 		if (do_sync) {
-			sem_wait(ha->sem_varp);
+			sem_wait(&LA_Variable.semaforo);
 		}
-		a=elentero;
+		a=LA_Variable.entero;
 		a++;
 		n=snprintf(buf,sizeof(buf),"%02d-\b\b\b", ha->num);
 		write(STDOUT_FILENO, buf, n);
-		elentero=a;
+		LA_Variable.entero=a;
 		if (do_sync) {
-			sem_post(ha->sem_varp);
+			sem_post(&LA_Variable.semaforo);
 		}
 	}
 	pthread_exit(NULL);
@@ -78,7 +81,6 @@ int main(int argc, char **argv)
 	struct hilo_arg hilo_args[MAX_HILOS];
 	char name[10];
 	sem_t sem_arranque;
-	sem_t sem_var;
 
 	int n_hilos;   /* cant de hilos a lanzar */
 	int n_iter;    /* cant de iteraciones de c/hilo */
@@ -109,20 +111,17 @@ int main(int argc, char **argv)
 	
 	sem_init(&sem_arranque, 0, 0);
 	if (do_sync) {
-		sem_init(&sem_var, 0, 1);
+		sem_init(&LA_Variable.semaforo, 0, 1);
 	}
 
 	/* lanzado de los threads */
 	fprintf(stderr, "n_hilos=%d\n", n_hilos);
-	elentero=0;
+	LA_Variable.entero=0;
 	printf("\ntotal = %d (%d*%d)\n", n_hilos*n_iter, n_hilos, n_iter);
 	for (i=0; i<n_hilos;i++) {
 		hilo_args[i].num=i;
 		sprintf(name, "\r%02d", i);
 		hilo_args[i].sem_arranquep=&sem_arranque;
-		if (do_sync) {
-			hilo_args[i].sem_varp=&sem_var;
-		}
 		hilo_args[i].n_iter=n_iter;
 		if (pthread_create(&hilos[i], NULL, hilo, (void*)&hilo_args[i]))
 			perror("pthread_create()");
@@ -139,7 +138,7 @@ int main(int argc, char **argv)
 		while(pthread_join(hilos[i], NULL));
 	}
 
-	printf("\ntotal'= %d\n", elentero);
+	printf("\ntotal'= %d\n", LA_Variable.entero);
 	return 0;
 }
 void usage(int h, int i) {
