@@ -1,4 +1,4 @@
-/* $Id: ipclib.h,v 1.2 2002/06/21 12:56:14 jjo Exp $ */
+/* $Id: ipclib.h,v 1.3 2002/06/21 18:40:41 jjo Exp $ */
 /*
  * Author: JuanJo Ciarlante <jjo@um.edu.ar>
  *
@@ -21,18 +21,18 @@ union semun
 	struct seminfo *__buf;
 };
 void *shm_create(key_t key, size_t size, int getflags, int atflags);
-int sem_create(key_t key, size_t n_sems, int getflags);
-int sem_up_flg(int sem_id, int sem_num, int delta, int flg);
-static __inline__ int sem_down_flg(int id, int num, int delta, int flg)
+int sema_create(key_t key, size_t n_sems, int getflags);
+int sema_up_flg(int sem_id, int sem_num, int delta, int flg);
+static __inline__ int sema_down_flg(int id, int num, int delta, int flg)
 {
-	return sem_up_flg(id, num, -delta, flg);
+	return sema_up_flg(id, num, -delta, flg);
 }
-static __inline__ int sem_up(int id, int num)
+static __inline__ int sema_up(int id, int num)
 {
-	return sem_up_flg(id, num, 1, 0);
+	return sema_up_flg(id, num, 1, 0);
 }
-static __inline__ int sem_down(int id, int num)
+static __inline__ int sema_down(int id, int num)
 {
-	return sem_up_flg(id, num, -1, 0);
+	return sema_up_flg(id, num, -1, 0);
 }
 

@@ -1,4 +1,4 @@
-/* $Id: ipclib.c,v 1.2 2002/06/21 12:56:14 jjo Exp $ */
+/* $Id: ipclib.c,v 1.3 2002/06/21 18:40:41 jjo Exp $ */
 /*
  * Author: JuanJo Ciarlante <jjo@um.edu.ar>
  *
@@ -34,7 +34,7 @@ void *shm_create(key_t key, size_t size, int getflags, int atflags)
 	return ptr;
 }
 
-int sem_create(key_t key, size_t n_sems, int getflags)
+int sema_create(key_t key, size_t n_sems, int getflags)
 {
 	int sem_id;
 	unsigned short vals[SEM_MAX];
@@ -53,7 +53,7 @@ int sem_create(key_t key, size_t n_sems, int getflags)
 	semctl(sem_id,n_sems,SETALL,arg);
 	return sem_id;
 }
-int sem_up_flg(int sem_id, int sem_num, int delta, int flg)
+int sema_up_flg(int sem_id, int sem_num, int delta, int flg)
 {
 	struct sembuf semops[1];
 	semops[0].sem_num=sem_num;
