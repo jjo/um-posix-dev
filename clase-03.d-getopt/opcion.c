@@ -1,5 +1,5 @@
 /*
- * 	$Id: opcion.c,v 1.2 2003/03/21 02:48:59 jjo Exp $
+ * 	$Id: opcion.c,v 1.3 2003/03/28 18:29:59 jjo Exp $
  *
  * 	Ejemplo de uso de getopt() 
  * 	Autor: JuanJo Ciarlante
@@ -24,9 +24,9 @@ extern int optind, opterr, optopt;
 
 char *program_name;
 
-int opt_b = 0;		/* -b           : opcion 'booleana' (flag) */
-int opt_i = -1;		/* -i <entero>  : opcion integer */
-char * opt_s = NULL;	/* -s <string>  : opcion string */
+int opcion_b = 0;		/* -b           : opcion 'booleana' (flag) */
+int opcion_i = 0;		/* -i <entero>  : opcion integer */
+char * opcion_s = NULL;	/* -s <string>  : opcion string */
 
 int main(int argc, char * const argv[])
 {
@@ -38,16 +38,25 @@ int main(int argc, char * const argv[])
 	while ((c=getopt(argc, argv, "bi:s:"))>=0) {
 		switch (c) {
 			case 'b':	/* -b : flag */
-				opt_b++;
+				opcion_b++;
 				break;
 			case 'i':	/* -i <entero> */
-				opt_i=atoi(optarg); 
+				opcion_i=atoi(optarg);
+				/* 
+				 * en este ejemplo, consideramos valor 0
+				 * inva'lido
+				 */
+				if (opcion_i == 0) {
+					fprintf(stderr, "ERROR: valor de '-i' invalido\n");
+					return 1;
+				}
 				break;
 			case 's':	/* -s <string> */
-				opt_s=optarg;
+				opcion_s=optarg;
 				break;
 			default:
 				fprintf(stderr, "opcion invalida: %c\n", c);
+				return 1;
 				break;
 		}
 	}
@@ -57,8 +66,8 @@ int main(int argc, char * const argv[])
 	argv+=(optind-1);
 	printf("argc=%d argv1=%s\n", argc, argv[1]);
 	*/
-	printf("opcion b=%d\n", opt_b);
-	printf("opcion i=%d\n", opt_i);
-	printf("opcion s=%s\n", opt_s ? opt_s : "<NULL>");
+	printf("opcion b=%d\n", opcion_b);
+	printf("opcion i=%d\n", opcion_i);
+	printf("opcion s=\"%s\"\n", opcion_s ? opcion_s : "<NULL>");
 	return 0;
 }
