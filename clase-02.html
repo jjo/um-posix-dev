@@ -1,0 +1,55 @@
+<html>
+<head><title>Inform&aacute;tica III - Clase 2</title></head>
+<body>
+<hr>
+<h1>Dispositivos</h1>
+	<ul>
+	<li> Introducci&oacute;n: estilo <em>todo es un archivo</em> de Unix
+		<ul>
+		<li> De bloques
+		<li> De caracteres <small>ver con ls -al </small>
+		</ul>
+	<li> ejemplos en /dev
+		<ul compact>
+		<li> hd<em>x</em>: hard disk (IDE)
+		<li> sd<em>x</em>: scsi disk
+		<li> tty: <strong>mi</strong> tty
+		<li> tty<em>n</em>: consolas
+		<li> ttyS<em>n</em>: serie
+		<li> lp<em>n</em>: paralelo
+		</ul>
+	</ul>
+<hr>
+<h1>Llamadas de librer&iacute;a y <em>syscalls</em></h1>
+<ul>
+<li> Esquema:
+<pre>
+                +-------------------------+
+                |        Aplicacion       |
+                |                         |
+                |            +------------|
+                |            |  libreria  |
+                |            | alto nivel |  &lt;--- librerias
+                |------------x            |
+                | bajo nivel              |
+                |%%%%%%%%%%%%%%%%%%%%%%%%%|  &lt;--- syscalls
+                |                         |
+                |                         |
+                |         kernel          |
+                |                         |
+                +-------------------------+
+                |        hardware         |
+                +-------------------------+
+</pre>
+<li> Comparaci&oacute;n I/O de alto y bajo nivel
+<li> strace: syscall trace<br>
+	comparar mismo programa: <code>printf("Hola mundo\n");</code> con 
+	<code>write(1, "Hola mundo\n", 12);</code>
+</ul>
+<hr>
+<h1> Creaci&oacute;n de "filtros"</h1>
+	<ul>
+	<li>Uso de los streams <code>stdin</code> y <code>stdout</code>
+	</ul>
+</body>
+</html>
