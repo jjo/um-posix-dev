@@ -1,0 +1,47 @@
+<html>
+<head><title>Inform&aacute;tica III - Clase 1</title></head>
+<body>
+<hr>
+<h1>El lenguaje C</h1>
+<pre>
+                              +-- Lenguaje "C"
+            ANSI C (ISO C) ---+-- Librer&iacute;a standard
+                                  ej: stdio.h, stdlib.h, string.h                                               
+</pre>
+<hr>
+<h1>Est&aacute;ndares relacionados con UNIX</h1>
+<pre>
+                              +-- ANSI C
+            Unix API       ---+-- POSIX
+                              +-- *BSD
+                              +-- SVID (System V)
+</pre>
+<hr>
+<h1>El entorno UNIX</h1>
+<ul>
+<li> Sesi&oacute;n: inicio y comandos b&aacute;sicos: <tt>mkdir, pwd, ls, cat</tt>
+<li> Compilaci&oacute;n de programas simples con <tt>make</tt> <br>
+	<tt>gcc</tt>: opciones m&aacute;s usadas
+<li> Esqueleto <em>correcto</em>:
+<code>
+<pre>
+	#include &lt;stdio.h&gt;
+	int main(void) {
+		:
+		return 0;
+	}
+</pre>
+<li> Ejemplos con <code>printf();</code> y <code>fprintf(stderr, ...);</code>
+<li> Canales stdin, stdout, stderr: ejemplos en el <em>shell</em> con
+	redirecciones
+<li> Introducci&oacute;n a ttys:
+	<ul compact>
+	<li> <tt>who</tt>
+	<li> <tt>finger</tt>
+	<li> <tt>tty</tt>
+	<li> <tt>write</tt>
+	</ul>
+</code>
+</ul>
+</body>
+</html>
