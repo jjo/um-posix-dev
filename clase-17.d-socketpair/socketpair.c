@@ -8,8 +8,8 @@
 #define ERRSYS(call) do { if ( (call) < 0) { perror(tostr(call));exit(1); }} while (0)
 
 enum data_type { INTEGER, DOUBLE };
-
 enum data_op { SUMAR, RESTAR, MULTIPLICAR, DIVIDIR };
+
 struct data {
 	int id;
 	enum data_type type;
@@ -45,29 +45,34 @@ int servicio(int fd)
 	return 0;
 
 }
+int pide_suma_int(int fd, int a, int b){
+	struct data data = {
+		.type = INTEGER,
+		.op   = SUMAR,
+		.u = {
+			.i = { 0, a, b }
+		}
+	};
+	write(fd, &data, sizeof (struct data));
+	read(fd, &data, sizeof (struct data));
+	return data.u.i[0];
+}
 int main(void)
 {
 	int fds[2];
+	int ret;
 	ERRSYS(socketpair(PF_UNIX, SOCK_DGRAM, 0, fds));
 	switch(fork()) {
 		case 0: /* hijo */
+			close(fds[0]);
 			return servicio(fds[1]);
 		case -1: /* error*/
 			perror("fork()");
 			return 1;
 	}
 	/* padre */
-	{
-		struct data data = {
-			.type = INTEGER,
-			.op   = SUMAR,
-			.u = {
-				.i = { 0, 10, 22 }
-			}
-		};
-		write(fds[0], &data, sizeof (struct data));
-		read(fds[0], &data, sizeof (struct data));
-		printf("resultado=%d\n", data.u.i[0]);
-	}
+	close(fds[1]);
+	ret=pide_suma_int(fds[0], 10, 22);
+	printf("resultado=%d\n", ret);
 	return 0;
 }
