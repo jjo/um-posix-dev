@@ -1,10 +1,8 @@
 /* 
- * $Id: test-signal-01-catch.c,v 1.4 2003/05/16 21:13:50 jjo Exp $
+ * $Id: test-signal-01-catch.c,v 1.5 2004/06/11 21:40:48 jjo Exp $
  */
 
-/*
-#define _POSIX_SOURCE 
-*/
+//#define _POSIX_SOURCE 
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>

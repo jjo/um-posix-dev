@@ -24,15 +24,15 @@ void handler(int sig)
 	char buf[256];
 	int len;
 	pid_t pidhijo;
-	pidhijo=waitpid(-1, NULL, 0);	/* "leo" la muerte del hijo */
-	
-	/* evito usar printf() o fprintf() a traves de un bufer local */
-	len=snprintf(buf, sizeof buf, "i=%d pid=%d\n", i, pidhijo);
-	write(2, buf, len);
+	while (( pidhijo=waitpid(-1, NULL, 0)) > 0) {	/* "leo" la muerte del hijo */
+		/* evito usar printf() o fprintf() a traves de un bufer local */
+		len=snprintf(buf, sizeof buf, " [i=%d pid=%d]", i, pidhijo);
+		write(2, buf, len);
+	}
+	write(2,"\n", 1);
 
 	/* lanzo otro hijo ... */
 	lanza_hijo();		
-
 }
 const char *progreso=")O(|";
 int main(void) 

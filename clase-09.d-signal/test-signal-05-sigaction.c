@@ -1,5 +1,5 @@
 /* 
- * $Id: test-signal-05-sigaction.c,v 1.2 2003/05/16 21:13:50 jjo Exp $
+ * $Id: test-signal-05-sigaction.c,v 1.3 2004/06/11 21:40:48 jjo Exp $
  */
 
 #include <stdio.h>
@@ -24,7 +24,7 @@ void handler_siginfo(int signum, siginfo_t *si, void *data) {
 int main(void) 
 {
 	struct sigaction sa;
-#if 1
+#if 0
 	sa.sa_flags= SA_RESTART;
 	sa.sa_handler=handler;
 #else
