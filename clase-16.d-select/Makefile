@@ -1,5 +1,5 @@
 CFLAGS=-g -Wall $(COPTS)
-TARGETS=do_select
+TARGETS=do_select do_select_hname
 
 all: $(TARGETS) 
 

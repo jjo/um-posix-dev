@@ -8,16 +8,20 @@ test-open: test-open.o libopen.o
 
 test: test1 test2 test3 test4 
 test1: test-open
+	@echo -e "\n*** $(@) ***"
 	-./test-open 1 archivo1.txt
 
 test2: test-open
-	./test-open 2 archivo2.txt
+	@echo -e "\n*** $(@) ***"
+	-./test-open 2 archivo2.txt
 
 test3: test-open
-	./test-open 3 archivo3.txt
+	@echo -e "\n*** $(@) ***"
+	-./test-open 3 archivo3.txt
 
 test4: test-open
-	./test-open 4 archivo4.txt
+	@echo -e "\n*** $(@) ***"
+	-./test-open 4 archivo4.txt
 
 
 clean:  
