@@ -1,4 +1,4 @@
-/* $Id: cluster-1-pi.c,v 1.1 2002/10/10 20:18:32 jjo Exp $ */
+/* $Id: cluster-1-pi.c,v 1.2 2002/10/10 20:24:46 jjo Exp $ */
 /*
  * Objetivo: Cluster MOSIX: ca'lculo de PI con multiproceso (no aun...)
  * Implementacion:
@@ -80,7 +80,6 @@ int main (int argc, const char *argv[])
 	int hijos;	/* cantidad de hijos a lanzar */
 	int tramos;	/* cantidad TOTAL de "divisiones" entre 0 y 1 */
 	pi_double_t mi_pi;	/* resultado */
-	pi_double_t mi_pi_parcial;	/* resultado de un hijo */
 	int pipefd[2];		/* pipe para leer resultado */
 	int i;
 	pi_double_t x_delta;	/* largo del tramo */
@@ -137,9 +136,8 @@ int main (int argc, const char *argv[])
 		}
 	}
 	fprintf(stderr, "\n");
-	printf("   PI=%20.18Lf\n", PI);
-	printf("mi_pi=%20.18Lf error=%20.18Lf\n",
-			mi_pi,
-			pi_diff(mi_pi));
+	printf("   PI=%36.34Lf\n", PI);
+	printf("mi_pi=%36.34Lf\n", mi_pi);
+	printf("error=%36.34Lf\n", pi_diff(mi_pi));
 	return 0;
 }
