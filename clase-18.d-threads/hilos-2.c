@@ -1,4 +1,4 @@
-/* $Id: hilos-2.c,v 1.2 2002/10/06 22:51:49 jjo Exp $ */
+/* $Id: hilos-2.c,v 1.3 2004/09/10 16:55:35 jjo Exp $ */
 /*
  * Author: JuanJo Ciarlante <jjo@um.edu.ar>
  *
@@ -31,7 +31,7 @@
 
 /* Probar con DO_SYNC en 0 o' 1 */
 #ifndef DO_SYNC
-#define DO_SYNC 1
+#define DO_SYNC 0
 #endif
 
 /* 
@@ -59,13 +59,8 @@ void * hilo(void *arg)
 {
 	int i,n;
 	char buf[256];
-	pthread_t tid;
 	int a;
 	struct hilo_arg *ha=arg;
-	tid=pthread_self();
-
-	n=snprintf(buf,sizeof(buf),"tid=%ld ", (long)tid);
-	write(1, buf, n);
 	
 	if (sem_wait(ha->sem_arranquep)) {
 		perror("hilo: sem_wait()");
@@ -82,7 +77,7 @@ void * hilo(void *arg)
 		a=elentero;
 		a++;
 		n=snprintf(buf,sizeof(buf),"%02d-\b\b\b", ha->num);
-		write(1, buf, n);
+		write(STDOUT_FILENO, buf, n);
 		elentero=a;
 #if DO_SYNC
 #if USE_SEM
@@ -159,7 +154,7 @@ int main(int argc, const char *argv[])
 			perror("pthread_create()");
 	}
 	fprintf(stderr, "%d hilos creados... esperando Enter->", n_hilos);
-	getchar();write(1,"\n",1);
+	getchar();write(STDOUT_FILENO,"\n",1);
 	for (i=0; i<n_hilos;i++) {
 		sem_post(&sem_arranque);
 	}

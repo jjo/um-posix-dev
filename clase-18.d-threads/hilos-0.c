@@ -1,4 +1,4 @@
-/* $Id: hilos-0.c,v 1.2 2003/10/10 21:24:17 jjo Exp $ */
+/* $Id: hilos-0.c,v 1.3 2004/09/10 16:55:35 jjo Exp $ */
 /*
  * Objetivo: POSIX threads: Mostrar la creación de threads y la espera de finalización
  * 
@@ -24,27 +24,36 @@
 #include <pthread.h>
 
 #define N_HILOS 10
+#define SIN_BUG 1
 
 void *hilo (void *arg);
 
 int main(void)
 {
 	int i;
+	int *i_ptr;
 /*%%*/	pthread_t hilos[N_HILOS];	/* para guardar todos los ID de threads  */
-	/* int hilo_args[N_HILOS];	*/
+#if SIN_BUG 
+	int hilo_args[N_HILOS];
+#endif
 
 	fprintf(stderr, "n_hilos=%d\n", N_HILOS);
 
-	/* Lanza los threads */
+	/* Bucle que lanzara' los threads */
 	for (i=0; i<N_HILOS;i++) {
-		/* hilo_args[i]=i; */
+#if SIN_BUG
+		hilo_args[i]=i;
+		i_ptr=&hilo_args[i];
+#else
+		i_ptr=&i;
+#endif
 
-		/* LA proxima linea tiene un BUG ! */
-/*%%*/		if (pthread_create(&hilos[i], NULL, hilo, (void*)&i)) 
+		/* crea cada thread */
+/*%%*/		if (pthread_create(&hilos[i], NULL, hilo, (void*)i_ptr)) 
 			perror("pthread_create()");
 	}
 
-	/* espera por finalizacio'n de TODOS */
+	/* espera por finalizacio'n de TODOS, uno por uno */
 	for (i=0; i<N_HILOS;i++) {
 /*%%*/		while(pthread_join(hilos[i], NULL));
 	}

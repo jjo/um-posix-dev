@@ -1,4 +1,4 @@
-/* $Id: hilos-1.c,v 1.6 2003/10/30 22:07:18 jjo Exp $ */
+/* $Id: hilos-1.c,v 1.7 2004/09/10 16:55:35 jjo Exp $ */
 /*
  * Objetivo: POSIX threads: Mostrar la creación de threads y la espera de finalización
  * 
@@ -85,7 +85,8 @@ void * hilo(void *arg)
 	
 	for (i=0;i<ha->n_iter;i++) {
 		/* dormir rando'micamente */
-		sched_yield();
+		usleep(random()%100000);
+
 		/* evitar usar stdio en threads */
 		n=snprintf(buf,sizeof(buf),"%02d-", ha->num);
 		write(STDOUT_FILENO, buf, n);
