@@ -1,4 +1,4 @@
-/* $Id: test-filedes.c,v 1.1 2003/04/11 21:51:53 jjo Exp $ */
+/* $Id: test-filedes.c,v 1.2 2004/04/30 18:41:14 jjo Exp $ */
 /*
  * Objetivo: Mostrar la utilización de descriptores de archivo (fd) mediante
  *           open(), dup(), dup2()
@@ -13,18 +13,16 @@
 #include <sys/stat.h>
 #include <time.h>
 
-const char *progname = NULL;
-void usage(FILE *f)
-{
-	fprintf(f, "uso: %s <archivo> \"<comando ... argumentos>\"\n", progname);
-}
+/**  Nombre del  "ejecutable", es decir: argv[0] pasado a main() */
+static const char *progname = NULL;
+
+static int  ejecuto_cmd(const char *cmd);
+static void usage(FILE *f);
 int main(int argc, char * const argv[])
 {
 	char *fname, *cmd;
 	int fd;
 	int fdbak;
-	int status; 		/* status de terminación del system() */
-	time_t curtime;	/* tiempo actual */
 
 	progname = argv[0];
 	if (argc != 3) {
@@ -53,12 +51,7 @@ int main(int argc, char * const argv[])
 		return 2;
 	}
 
-	/* Hacemos "algo" que vaya a standard output */
-	time(&curtime);
-	printf("* COMIENZO -- %s\n", ctime(&curtime));
-	status=system(cmd);
-	time(&curtime);
-	printf("* FIN      -- %s\n", ctime(&curtime));
+	ejecuto_cmd(cmd);
 
 	/* "Restauramos" el stdout anterior */
 	if (dup2(fdbak, STDOUT_FILENO) < 0) {
@@ -67,4 +60,24 @@ int main(int argc, char * const argv[])
 	}
 	printf("Es e'ste mi standard output original ? \n");
 	return 0;
+}
+/** 
+ * Ejecuto "cmd" con el objetivo de "generar" algo en stdout
+ * @param cmd comando a ejecutar, por ej: "ls -al"
+ * @return el status de terminacion de system()
+ */
+int ejecuto_cmd(const char *cmd) 
+{
+	time_t curtime;		/* tiempo actual */
+	int status; 		/* status de terminación del system() */
+	time(&curtime);
+	printf("* COMIENZO -- %s\n", ctime(&curtime));
+	status=system(cmd);
+	time(&curtime);
+	printf("* FIN      -- %s\n", ctime(&curtime));
+	return status;
+}
+static void usage(FILE *f)
+{
+	fprintf(f, "uso: %s <archivo> \"<comando ... argumentos>\"\n", progname);
 }
