@@ -1,13 +1,20 @@
+/* 
+ * $Id: hilo-main.c,v 1.2 2003/10/30 21:07:39 jjo Exp $
+ *
+ * Author: JuanJo Ciarlante <jjo@um.edu.ar>
+ * License: GPLv2
+ *
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 
 #include <pthread.h>
-#include "locklib.h"
+#include "libjj.h"
 
 #define min(a,b) ((a)<=(b)? (a) : (b))
 struct var_protegida {
-	void *lockeador;
+	void *lock;
 	unsigned valor;
 };
 
@@ -18,9 +25,9 @@ void *incr(void *var) {
 	struct var_protegida *vpp=var;
 	//printf("adentro ... \n");
 	while(i--) {
-		locklib_lock(vpp->lockeador);
+		jj_critic_on(vpp->lock);
 		vpp->valor++;
-		locklib_unlock(vpp->lockeador);
+		jj_critic_off(vpp->lock);
 	}
 	return NULL;
 }
@@ -38,16 +45,16 @@ int main(int argc , char *argv[])
 	n_hilos=atoi(argv[2]);
 	n_hilos=min(n_hilos, MAX_HILOS);
 	vp.valor=0;
-	if(!(vp.lockeador=locklib_new())) {
-		fprintf(stderr, "locklib_new() retorno NULL\n");
+	if(!(vp.lock=jj_critic_new())) {
+		fprintf(stderr, "critic_new() retorno NULL\n");
 		return 2;
 	}
 	printf("Desplegando %d hilos * %d loops\n", n_hilos, n_loops);
-	locklib_lock(vp.lockeador);
+	jj_critic_on(vp.lock);
 	for (i=0; i< n_hilos; i++) {
 		pthread_create(&tid[i], NULL, incr, &vp);
 	}
-	locklib_unlock(vp.lockeador);
+	jj_critic_off(vp.lock);
 	for (i=0; i< n_hilos; i++) {
 		pthread_join(tid[i], NULL);
 	}

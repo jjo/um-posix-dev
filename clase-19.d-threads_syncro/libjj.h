@@ -1,3 +1,3 @@
-void *locklib_new(void);
-int locklib_lock(void *);
-int locklib_unlock(void *);
+void *jj_critic_new(void);
+int jj_critic_on(void *);
+int jj_critic_off(void *);

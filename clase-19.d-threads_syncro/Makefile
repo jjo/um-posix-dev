@@ -5,13 +5,13 @@ LDLIBS=-lpthread
 
 all: $(TARGETS) 
 
-hilo-sync-mutex: hilo-main.o locklib_mutex.o
+hilo-sync-mutex: hilo-main.o libjj_mutex.o
 	$(CC) -o $(@) $^ $(LDLIBS)
 
-hilo-sync-sem: hilo-main.o locklib_sem.o
+hilo-sync-sem: hilo-main.o libjj_sem.o
 	$(CC) -o $(@) $^ $(LDLIBS)
 
-hilo-sync-rwlock: hilo-main.o locklib_rwlock.o
+hilo-sync-rwlock: hilo-main.o libjj_rwlock.o
 	$(CC) -o $(@) $^ $(LDLIBS)
 
 clean:  
