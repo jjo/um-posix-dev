@@ -1,4 +1,4 @@
-/* $Id: test-shmsem-var.c,v 1.8 2003/06/13 21:19:13 jjo Exp $ */
+/* $Id: test-shmsem-var.c,v 1.9 2003/06/13 23:26:38 jjo Exp $ */
 /*
  * Author: JuanJo Ciarlante <jjo@um.edu.ar>
  *
@@ -25,9 +25,6 @@
 #include <sys/sem.h>
 
 #include "ipclib.h"
-
-/* Probar con USE_SEM en 0 o' 1 */
-#define USE_SEM 1
 
 #define SHM_KEY (ftok(".",0))
 #define SEM_KEY (ftok(".",0))
