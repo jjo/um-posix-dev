@@ -5,22 +5,14 @@
 
 #include <sys/sem.h>
 
+#include "common.h"
 #include "cocinero.h"
 #include "proveedor.h"
-union semun {
-	int val;
-	struct semid_ds *buf;
-	unsigned short int *array;
-	struct seminfo *__buf;
-};
-
-/* Un solo set con 5 semaforos */
-#define SEMS_NUM     5
 int mi_sem_open(void)
 {
 	int semid;
 	union semun semctl_arg;
-	unsigned short array[SEMS_NUM] = { 0, 0, 0, 0, 0};
+	unsigned short array[SEMS_NUM] = { 0, 0, 0, 0, 0, 0};
 
 	semctl_arg.array=array;
 	
