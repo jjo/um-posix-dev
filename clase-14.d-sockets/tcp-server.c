@@ -37,8 +37,8 @@ int main(int argc, const char *argv[])
 	 */
 	memset(&addr_in, 0, sizeof(struct sockaddr_in));
 	addr_in.sin_family = AF_INET;
-	addr_in.sin_port = htons(port);
 	addr_in.sin_addr.s_addr = INADDR_ANY;
+	addr_in.sin_port = htons(port);
 
 	/* 
 	 * Por si quedo' semi-cerrado recie'n: fuerzo reuso
@@ -62,12 +62,9 @@ int main(int argc, const char *argv[])
 		perror("listen()");return 1;
 	}
 
-	/* 
-	 * no me interesa el exit_value de mis hijos (evito
-	 * zombies)
-	 */
-	
+	/* no me interesa el exit_value de mis hijos (evito zombies) */
 	signal(SIGCHLD, SIG_IGN);
+
 	/* 
 	 * accept(): duermo hasta que entre una conexion 
 	 */
@@ -94,7 +91,7 @@ int main(int argc, const char *argv[])
 
 void servicio(int fd) {
 	const char *array[] = { "TRES\n", "DOS\n", "UNO\n", "b00M!\n", NULL };
-	const char **strp=array;
+	const char **elemp=array;
 	char buf[1024];
 	char *str=buf;
 	FILE *f;
@@ -111,9 +108,11 @@ void servicio(int fd) {
 		str+=strlen(str);
 	}
 	setbuf(f, NULL);
+	/* muestro string */
 	fprintf(f,"STR=%s\n", buf);
-	for(;*strp;strp++) {
-		fputs(*strp, f);
+	/* cuenta regresiva :) */
+	for(;*elemp;elemp++) {
+		fputs(*elemp, f);
 		usleep(400000);
 	}
 	fclose(f);

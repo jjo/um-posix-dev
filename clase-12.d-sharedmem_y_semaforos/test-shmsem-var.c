@@ -1,4 +1,4 @@
-/* $Id: test-shmsem-var.c,v 1.9 2003/06/13 23:26:38 jjo Exp $ */
+/* $Id: test-shmsem-var.c,v 1.10 2004/08/20 21:22:14 jjo Exp $ */
 /*
  * Author: JuanJo Ciarlante <jjo@um.edu.ar>
  *
@@ -30,10 +30,11 @@
 #define SEM_KEY (ftok(".",0))
 
 /* numero del semaforo dentro del set */
-#define SEMA_VAR	0
-#define SEMA_ARRANQUE	1
+#define SEM_de_VARIABLE	0
+#define SEM_de_ARRANQUE	1
+#define CANT_SEMS	2
 
-#define MAX_HILOS 50
+#define MAX_HILOS 150
 
 /* 
  * variable global que indica si usar semaforos para
@@ -52,17 +53,17 @@ void hilo(int *int_p, int sem_id, int n_iter, char *id)
 	int a;
 	int i;
 
-	mi_sema_down(sem_id, SEMA_ARRANQUE);
+	mi_sema_down(sem_id, SEM_de_ARRANQUE);
 
 	for (i=0;i<n_iter;i++) {
-		if (use_sem) mi_sema_down_flags(sem_id, SEMA_VAR, 1, SEM_UNDO);
+/*%*/		if (use_sem) mi_sema_down_flags(sem_id, SEM_de_VARIABLE, 1, SEM_UNDO);
 
 		a=*int_p;
 		a++;
 		if (id) write(2,id,strlen(id));
 		*int_p=a;
 
-		if (use_sem) mi_sema_up_flags(sem_id, SEMA_VAR, 1, SEM_UNDO);
+/*%*/		if (use_sem) mi_sema_up_flags(sem_id, SEM_de_VARIABLE, 1, SEM_UNDO);
 	}
 }
 void usage(void) {
@@ -95,8 +96,9 @@ int main(int argc, char *const argv[])
 	if (argc!=3) {
 		usage();
 	}
-	if (    (n_hilos=atoi(argv[1])) <= 0  || n_hilos > MAX_HILOS ||
-		(n_iter=atoi(argv[2]))  <= 0  ) {
+	if (    (n_hilos=atoi(argv[1])) <= 0  || 
+		(n_iter=atoi(argv[2]))  <= 0  || 
+		 n_hilos > MAX_HILOS ) {
 		fprintf(stderr, "ERROR: argumento(s) no valido(s) "
 			"n_hilos=%d, n_iter=%d\n",
 				n_hilos, n_iter);
@@ -112,7 +114,7 @@ int main(int argc, char *const argv[])
 	if (!int_p) 	return 1;
 
 	/* creacion del set de mi_semaforos */
-	sem_id=mi_sema_create(sem_key, 2, IPC_CREAT|0666);
+	sem_id=mi_sema_create(sem_key, CANT_SEMS, IPC_CREAT|0666);
 	if (sem_id<0)	return 1;
 
 
@@ -136,10 +138,13 @@ int main(int argc, char *const argv[])
 
 	/* inicializo el "entero compartido", y el semaforo de la variable */
 	*int_p=0;
-	mi_sema_up(sem_id, SEMA_VAR);
+	mi_sema_up(sem_id, SEM_de_VARIABLE);
 
-	/* se~aliza hilos simulta'neamente */
-	mi_sema_up_flags(sem_id, SEMA_ARRANQUE, n_hilos, 0);
+	/* 
+	 * se~aliza n_hilos simulta'neamente, aqui' n_hilos es la cant. de 
+	 * "recursos" a sumar al semaforo 
+	 */
+	mi_sema_up_flags(sem_id, SEM_de_ARRANQUE, n_hilos, 0);
 
 	/* espera la muerte de todos los hijos */
 	while(waitpid(-1, NULL, 0)>0);

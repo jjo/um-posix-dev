@@ -1,5 +1,5 @@
 /*
- * $Id: test-fork2.c,v 1.2 2003/04/25 21:10:28 jjo Exp $
+ * $Id: test-fork2.c,v 1.3 2004/08/20 21:22:13 jjo Exp $
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -25,7 +25,6 @@ int main(int argc, char *const argv[])
 		case 0:		/* hijo */
 			servicio(fd);
 			break;
-		default:	/* padre */
 	}
 	printf("Saliendo...");
 	return 0;

@@ -25,7 +25,7 @@ int main(int argc, char **argv) {
 	while (fscanf(f, "%63s", string)==1) palabra_add(string);
 	close(f);
 
-	while(scanf("%c %63s\n", &cmd, string)==2) {
+	while(scanf("%c %63s", &cmd, string)==2) {
 		switch(cmd) {
 			case 'f':
 				p=palabra_find(string);

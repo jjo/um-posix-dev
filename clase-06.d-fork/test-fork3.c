@@ -1,5 +1,5 @@
 /*
- * $Id: test-fork3.c,v 1.1 2003/05/02 20:34:14 jjo Exp $
+ * $Id: test-fork3.c,v 1.2 2004/08/20 21:22:13 jjo Exp $
  *
  * Como test-fork2.c pero mas prolijo: 
  * 	- el hijo no muestra "Saliendo" (return 0 al main)
@@ -31,7 +31,6 @@ int main(int argc, char *const argv[])
 		case 0:		/* hijo */
 			servicio_seg(fd, 1); /* 1 segundo */
 			return 0;
-		default:	/* padre */
 	}
 	/* deberi'amos ver si wait() retorna error (-1) ... */
 	ret=wait (&status);

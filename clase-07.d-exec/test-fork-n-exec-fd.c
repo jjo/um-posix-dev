@@ -23,7 +23,6 @@ int main(void) {
 			execlp("cat", "cat", NULL);
 			printf("*** luego del exec()\n");
 			return 255;	/* error si llega aqui =) */
-		default: /* padre */
 	}
 	wait (&status);
 	printf("*** Saliendo ...\n");

@@ -12,3 +12,4 @@ tcp_ip_server: tcp_ip_server.o
 clean: 
 	rm -f *.o *~ $(TARGETS) core
 
+-include ../doxygen/Makefile.dox

@@ -10,10 +10,9 @@ int main(void) {
 			perror("fork()");
 			return 1;
 		case 0:	/* hijo */
-			execlp("ls", "ls", "-al", NULL);
+			execlp("ls", "ls", "/al", NULL);
 			printf("*** luego del exec()\n");
 			return 255;	/* error si llega aqui =) */
-		default: /* padre */
 	}
 	wait (&status);
 	printf("*** Saliendo ...\n");
