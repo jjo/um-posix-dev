@@ -1,4 +1,4 @@
-/* $Id: test-shmsem-var.c,v 1.5 2002/06/21 18:40:41 jjo Exp $ */
+/* $Id: test-shmsem-var.c,v 1.6 2002/06/21 21:42:25 jjo Exp $ */
 /*
  * Author: JuanJo Ciarlante <jjo@um.edu.ar>
  *
@@ -26,15 +26,22 @@
 
 #include "ipclib.h"
 
-#define SHM_KEY 0x00240667
-#define SEM_KEY 0x00240667
-
-#define SEMA_VAR 0
-#define SEMA_ARRANQUE 1
 /* Probar con USE_SEM en 0 o' 1 */
 #ifndef USE_SEM
 #define USE_SEM 1
 #endif
+
+/*
+#define SHM_KEY 0x00240667
+#define SEM_KEY 0x00240667
+*/
+#define SHM_KEY (ftok(".",0))
+#define SEM_KEY (ftok(".",0))
+
+#define SEMA_VAR 0
+#define SEMA_ARRANQUE 1
+
+#define MAX_HILOS 50
 
 void hilo(int *int_p, int sem_id, int n_iter, char *id)
 {
@@ -77,7 +84,7 @@ int main(int argc, const char *argv[])
 		fprintf(stderr, "ERROR: uso: %s n_hilos n_iter \n", argv[0]);
 		return 255;
 	}
-	if (    (n_hilos=atoi(argv[1])) <= 0  || n_hilos > 50 ||
+	if (    (n_hilos=atoi(argv[1])) <= 0  || n_hilos > MAX_HILOS ||
 		(n_iter=atoi(argv[2]))  <= 0  ) {
 		fprintf(stderr, "ERROR: argumento(s) no valido(s) "
 			"n_hilos=%d, n_iter=%d\n",

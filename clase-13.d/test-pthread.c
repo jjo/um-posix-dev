@@ -1,4 +1,4 @@
-/* $Id: test-pthread.c,v 1.1 2002/06/21 18:45:15 jjo Exp $ */
+/* $Id: test-pthread.c,v 1.2 2002/06/21 21:42:25 jjo Exp $ */
 /*
  * Author: JuanJo Ciarlante <jjo@um.edu.ar>
  *
@@ -22,20 +22,23 @@
 #include <pthread.h>
 #include <semaphore.h>
 
-#define SEMA_VAR 0
-#define SEMA_ARRANQUE 1
 /* Probar con USE_SEM en 0 o' 1 */
 #ifndef USE_SEM
 #define USE_SEM 1
 #endif
+
 #ifndef USE_MUTEX
 #define USE_MUTEX 1
 #endif
 
+#define SEMA_VAR 0
+#define SEMA_ARRANQUE 1
+#define MAX_HILOS 50
+
 struct hilo_arg {
 	int *int_p;
 	sem_t *sem;
-	pthread_mutex_t mutex;
+	pthread_mutex_t *mutex;
 	int n_iter;
 	char *id;
 };
@@ -54,7 +57,7 @@ void * hilo(void *arg)
 	for (i=0;i<hilo_arg->n_iter;i++) {
 #if USE_SEM
 #if USE_MUTEX
-		pthread_mutex_lock(&hilo_arg->mutex);
+		pthread_mutex_lock(hilo_arg->mutex);
 #else
 		sem_wait(&hilo_arg->sem[SEMA_VAR]);
 #endif /* USE_MUTEX */
@@ -66,7 +69,7 @@ void * hilo(void *arg)
 
 #if USE_SEM
 #if USE_MUTEX
-		pthread_mutex_unlock(&hilo_arg->mutex);
+		pthread_mutex_unlock(hilo_arg->mutex);
 #else
 		sem_post(&hilo_arg->sem[SEMA_VAR]);
 #endif /* USE_MUTEX */
@@ -78,13 +81,16 @@ int main(int argc, const char *argv[])
 {
 	int elentero;
 	int i;
-	pthread_t hilos[256];
-	struct hilo_arg hilo_args[256];
+	pthread_t hilos[MAX_HILOS];
+	struct hilo_arg hilo_args[MAX_HILOS];
 	pthread_attr_t attr;
 	char name[10];
 #if USE_SEM
 	sem_t sem[2];
 #endif /* USE_SEM */
+#if USE_MUTEX
+	pthread_mutex_t mutex;
+#endif
 	int n_hilos;   /* cant de hilos a lanzar */
 	int n_iter;    /* cant de iteraciones de c/hilo */
 
@@ -92,7 +98,7 @@ int main(int argc, const char *argv[])
 		fprintf(stderr, "ERROR: uso: %s n_hilos n_iter \n", argv[0]);
 		return 255;
 	}
-	if (    (n_hilos=atoi(argv[1])) <= 0  || n_hilos > 50 ||
+	if (    (n_hilos=atoi(argv[1])) <= 0  || n_hilos > MAX_HILOS ||
 		(n_iter=atoi(argv[2]))  <= 0  ) {
 		fprintf(stderr, "ERROR: argumento(s) no valido(s) "
 			"n_hilos=%d, n_iter=%d\n",
@@ -108,6 +114,9 @@ int main(int argc, const char *argv[])
 	sem_init(&sem[SEMA_VAR], 0, 1);
 	sem_init(&sem[SEMA_ARRANQUE], 0, 0);
 #endif /* USE_SEM */
+#if USE_MUTEX
+	pthread_mutex_init(&mutex, NULL);
+#endif
 
 	pthread_attr_init(&attr);
 	pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
@@ -119,8 +128,8 @@ int main(int argc, const char *argv[])
 		hilo_args[i].int_p=&elentero;
 #if USE_SEM
 		hilo_args[i].sem=sem;
-#ifdef USE_MUTEX
-		pthread_mutex_init(&hilo_args[i].mutex, NULL);
+#if USE_MUTEX
+		hilo_args[i].mutex=&mutex;
 #endif
 #endif /* USE_SEM */
 		hilo_args[i].n_iter=n_iter;
@@ -128,6 +137,7 @@ int main(int argc, const char *argv[])
 		if (pthread_create(&hilos[i], &attr, hilo, (void*)&hilo_args[i]))
 			perror("pthread_create()");
 	}
+	pthread_attr_destroy(&attr);
 #if USE_SEM /* compila condicionalmente */
 	fprintf(stderr, "%d hilos creados... esperando Enter->", n_hilos);
 	getchar();write(1,"\n",1);
