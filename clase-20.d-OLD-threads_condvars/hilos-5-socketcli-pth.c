@@ -1,4 +1,4 @@
-/* $Id: hilos-4-socketcli.c,v 1.2 2002/10/03 01:31:53 jjo Exp $ */
+/* $Id: hilos-5-socketcli-pth.c,v 1.1 2002/10/03 01:31:53 jjo Exp $ */
 /*
  * Objetivo: POSIX threads: cliente "telnet" MT
  * Implementacion:
@@ -30,7 +30,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
-#include <pthread.h>
+#include <pth.h>
 
 #define tostr(x) #x
 #define ERRSYS(call) do { if ( (call) < 0) { perror(tostr(call));exit(1); }} while (0)
@@ -45,12 +45,12 @@ int conecta_a(const char *str, unsigned port)
 		fprintf(stderr, "inet_aton(\"%s\", ...) fallo'\n", str);
 		exit(1);
 	}
-	ERRSYS( connect (sockfd, (struct sockaddr *)&s_in, sizeof(s_in)) );
+	ERRSYS( pth_connect (sockfd, (struct sockaddr *)&s_in, sizeof(s_in)) );
 	return sockfd;
 }
 struct hilo_cond {
-	pthread_mutex_t mutex;
-	pthread_cond_t  cond;
+	pth_mutex_t mutex;
+	pth_cond_t  cond;
 	int val;
 };
 #define HILO_COND_ZERO  { PTHREAD_MUTEX_INITIALIZER, PTHREAD_MUTEX_INITIALIZER, 0 }
@@ -61,32 +61,32 @@ struct hilo_fildes {
 };
 int hilo_cond_set(struct hilo_cond *hc, int val)
 {
-	pthread_mutex_lock(&hc->mutex);
+	pth_mutex_acquire(&hc->mutex, 0, NULL);
 	hc->val = val;
-	pthread_mutex_unlock(&hc->mutex);
-	pthread_cond_signal(&hc->cond);
+	pth_mutex_release(&hc->mutex);
+	pth_cond_notify(&hc->cond, 0);
 	return val;
 }
 int hilo_cond_delta(struct hilo_cond *hc, int delta)
 {
 	int val;
-	pthread_mutex_lock(&hc->mutex);
+	pth_mutex_acquire(&hc->mutex, 0, NULL);
 	val = hc->val + delta;
 	if (val<0) val=0;
 	hc->val = val;
 	printf("DELTA val=(%d)\n", hc->val);
-	pthread_mutex_unlock(&hc->mutex);
-	pthread_cond_signal(&hc->cond);
+	pth_mutex_release(&hc->mutex);
+	pth_cond_notify(&hc->cond, 0);
 	
 	return val;
 }
 int hilo_cond_waitfor(struct hilo_cond *hc, int val)
 {
-	pthread_mutex_lock(&hc->mutex);
 	printf("ENTRO val=(%d,%d)\n", hc->val, val);
+	pth_mutex_acquire(&hc->mutex, 0, NULL);
 	while (hc->val != val) 
-		pthread_cond_wait(&hc->cond, &hc->mutex);
-	pthread_mutex_unlock(&hc->mutex);
+		pth_cond_await(&hc->cond, &hc->mutex, NULL);
+	pth_mutex_release(&hc->mutex);
 	printf("SALIO val=(%d,%d)\n", hc->val, val);
 	return val;
 }
@@ -95,12 +95,12 @@ void * hilo_fildes_copy(void *data)
 	struct hilo_fildes *hfd=data;
 	int nread;
 	char buf[1024];
-	printf("tid=%ld fd_int=%d fd_out=%d\n", pthread_self(), hfd->fd_in, hfd->fd_out);
-	while ((nread=read(hfd->fd_in, buf, sizeof(buf)))>0) {
+	printf("tid=%ld fd_int=%d fd_out=%d\n", (long)pth_self(), hfd->fd_in, hfd->fd_out);
+	while ((nread=pth_read(hfd->fd_in, buf, sizeof(buf)))>0) {
 		hilo_cond_set(hfd->cond, 5);
-		write(hfd->fd_out, buf, nread);
+		pth_write(hfd->fd_out, buf, nread);
 	}
-	printf("tid=%ld nread=%d\n", pthread_self(), nread);
+	printf("tid=%ld nread=%d\n", (long)pth_self(), nread);
 	hilo_cond_set(hfd->cond, 0);
 	return NULL;
 }
@@ -110,13 +110,14 @@ void *hilo_ticks(void *data)
 	while(1) {
 		printf("*TICK.\n");
 		hilo_cond_delta(hc, -1);
-		sleep(1);
+		pth_sleep(1);
 	}
 	return NULL;
 }
 int main(int argc, const char *argv[]) {
 	int sockfd;
-	pthread_t tid_stdin_net, tid_net_stdout, tid_ticks;
+	pth_t tid_stdin_net, tid_net_stdout, tid_ticks;
+	pth_attr_t attr;
 	struct hilo_cond cond; // = HILO_COND_ZERO;
 	struct hilo_fildes fildes_stdin_net = { STDIN_FILENO, -1, &cond };
 	struct hilo_fildes fildes_net_stdout= { -1, STDOUT_FILENO, &cond};
@@ -125,18 +126,26 @@ int main(int argc, const char *argv[]) {
 		fprintf(stderr, "uso: %s IP.AD.DR.ES PORT\n", argv[0]);
 		return 255;
 	}
+	pth_init();
 	sockfd=conecta_a (argv[1], atoi(argv[2]));
-	pthread_mutex_init(&cond.mutex, NULL);
-	pthread_cond_init(&cond.cond, NULL);
+	pth_mutex_init(&cond.mutex);
+	attr = pth_attr_new();
+	pth_attr_set(attr, PTH_ATTR_STACK_SIZE, 64*1024);
+	pth_attr_set(attr, PTH_ATTR_JOINABLE, FALSE);
+
+	pth_cond_init(&cond.cond);
 	cond.val= 0;
 
 	fildes_stdin_net.fd_out = sockfd;
 	fildes_net_stdout.fd_in = sockfd;
-	pthread_create(&tid_stdin_net, NULL, 
+	pth_attr_set(attr, PTH_ATTR_NAME, "stdin_net");
+	tid_stdin_net = pth_spawn(attr,  
 			hilo_fildes_copy, &fildes_stdin_net);
-	pthread_create(&tid_net_stdout, NULL, 
+	pth_attr_set(attr, PTH_ATTR_NAME, "net_stdout");
+	tid_net_stdout= pth_spawn(attr, 
 			hilo_fildes_copy, &fildes_net_stdout);
-	pthread_create(&tid_ticks, NULL,
+	pth_attr_set(attr, PTH_ATTR_NAME, "ticks");
+	tid_ticks = pth_spawn(attr, 
 			hilo_ticks, &cond);
 	hilo_cond_set(&cond, 5);
 	hilo_cond_waitfor(&cond, 0);

@@ -1,6 +1,10 @@
-/* $Id: hilos-3-condvars.c,v 1.2 2002/09/30 14:10:59 jjo Exp $ */
+/* $Id: hilos-3-condvars.c,v 1.3 2002/10/03 01:31:53 jjo Exp $ */
 /*
  * Objetivo: POSIX threads: Mostrar el uso de "condition variables" en 
+ * Implementacion:
+ * 	Se lanzan dos threads: 1 que espera que un contador llegue a un
+ * 	determinado número y otra que incrementa dicho contador a intervalo
+ * 	regular.
  * 
  * Author: JuanJo Ciarlante <jjo@um.edu.ar>
  *
