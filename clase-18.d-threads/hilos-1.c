@@ -1,5 +1,7 @@
-/* $Id: hilos-1.c,v 1.3 2002/09/27 23:36:31 jjo Exp $ */
+/* $Id: hilos-1.c,v 1.4 2002/10/02 23:43:05 jjo Exp $ */
 /*
+ * Objetivo: POSIX threads: Mostrar la creación de threads y la espera de finalización
+ * 
  * Author: JuanJo Ciarlante <jjo@um.edu.ar>
  *
  * This program is free software; you can redistribute it and/or modify it
