@@ -26,77 +26,29 @@
 #include <sys/time.h>
 #include <sys/signal.h>
 
+#include "ipclib.h"
+
 #define SHM_KEY 0x00240667
 #define SEM_KEY 0x00240667
 
 /* Probar con USE_SEM en 0 o' 1 */
-#define USE_SEM 1
+#ifndef USE_SEM
+#define USE_SEM 0
+#endif
 
-/* crear un area de memoria compartida */
-void *shm_create(key_t key, size_t size, int getflags, int atflags)
-{
-	int shm_id;
-	void *ptr;
-	shm_id=shmget(key, size, getflags);
-	if (shm_id ==-1) { perror ("shmget");return NULL;}
-	ptr=shmat(shm_id, NULL, atflags);
-	if (ptr ==(void *)-1) { perror ("shmat");return NULL;}
-	return ptr;
-}
-
-#if USE_SEM /* compila condicionalmente */
-#define SEM_MAX 10
-union semun
-{
-	int val;
-	struct semid_ds *buf;
-	unsigned short int *array;
-	struct seminfo *__buf;
-};
-int sem_create(key_t key, size_t n_sems, int getflags)
-{
-	int sem_id;
-	unsigned short vals[SEM_MAX];
-	union semun arg;
-
-	if(n_sems>=SEM_MAX) {
-		fprintf(stderr, "ERROR: n_sems=%d>SEM_MAX\n",
-				n_sems);
-		return -1;
-	}
-	sem_id=semget(key, n_sems, getflags);
-	if (sem_id ==-1) { perror ("semget"); return -1;}
-	/* reset */
-	memset(vals, 0, sizeof(vals));
-	arg.array=vals;
-	semctl(sem_id,n_sems,SETALL,arg);
-	return sem_id;
-}
-int sem_up_flg(int sem_id, int sem_num, int delta, int flg)
-{
-	struct sembuf semops[1];
-	semops[0].sem_num=sem_num;
-	semops[0].sem_op=delta;
-	semops[0].sem_flg=flg;
-	
-	return semop(sem_id, semops, 1);
-}
-#define sem_up(id, num, delta) sem_up_flg(id, num, delta, 0)
-
-#endif /* USE_SEM */
 void hijo(int *int_p, int sem_id, int n_iter, char *id)
 {
 	int a;
 	int i;
 #if USE_SEM /* compila condicionalmente */
-	if (sem_up(sem_id, 1, -1)<0) {
+	if (sem_down(sem_id, 1)<0) {
 		perror("hijo: sem_down()");
 		exit(1);
 	}
 #endif /* USE_SEM */
 	for (i=0;i<n_iter;i++) {
 #if USE_SEM /* compila condicionalmente */
-		sem_up_flg(sem_id, 0, -1, SEM_UNDO);
+		sem_down_flg(sem_id, 0, 1, SEM_UNDO);
 #endif /* USE_SEM */
 		a=*int_p;
 		a++;
@@ -148,7 +100,7 @@ int main(int argc, const char *argv[])
 	sem_id=sem_create(sem_key, 2, IPC_CREAT|0666);
 	if (sem_id<0)
 		return 1;
-	sem_up(sem_id, 0, 1);
+	sem_up(sem_id, 0);
 #endif /* USE_SEM */
 
 	srand(time(NULL));
@@ -161,7 +113,7 @@ int main(int argc, const char *argv[])
 #if USE_SEM /* compila condicionalmente */
 	fprintf(stderr, "Enter->");
 	getchar();
-	sem_up(sem_id, 1, n_hijos);	/* se~aliza hijos simulta'neamente */
+	sem_up_flg(sem_id, 1, n_hijos, 0);	/* se~aliza hijos simulta'neamente */
 #endif /* USE_SEM */
 
 	while(waitpid(-1, NULL, 0)>0);
