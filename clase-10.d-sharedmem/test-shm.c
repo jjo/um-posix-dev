@@ -1,3 +1,4 @@
+/* $Id: test-shm.c,v 1.3 2003/06/06 20:46:00 jjo Exp $ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>

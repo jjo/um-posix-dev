@@ -1,4 +1,4 @@
-/* $Id: test-shmsem-var.c,v 1.6 2002/06/21 21:42:25 jjo Exp $ */
+/* $Id: test-shmsem-var.c,v 1.7 2003/06/06 20:50:13 jjo Exp $ */
 /*
  * Author: JuanJo Ciarlante <jjo@um.edu.ar>
  *
@@ -28,7 +28,7 @@
 
 /* Probar con USE_SEM en 0 o' 1 */
 #ifndef USE_SEM
-#define USE_SEM 1
+#define USE_SEM 0
 #endif
 
 /*
@@ -53,6 +53,7 @@ void hilo(int *int_p, int sem_id, int n_iter, char *id)
 		exit(1);
 	}
 #endif /* USE_SEM */
+
 	for (i=0;i<n_iter;i++) {
 #if USE_SEM
 		sema_down_flg(sem_id, SEMA_VAR, 1, SEM_UNDO);
@@ -65,6 +66,7 @@ void hilo(int *int_p, int sem_id, int n_iter, char *id)
 #if USE_SEM
 		sema_up_flg(sem_id, SEMA_VAR, 1, SEM_UNDO);
 #endif /* USE_SEM */
+
 	}
 }
 int main(int argc, const char *argv[]) 
