@@ -1,4 +1,4 @@
-/* $Id: hilos-0.c,v 1.1 2003/10/10 21:04:54 jjo Exp $ */
+/* $Id: hilos-0.c,v 1.2 2003/10/10 21:24:17 jjo Exp $ */
 /*
  * Objetivo: POSIX threads: Mostrar la creación de threads y la espera de finalización
  * 
@@ -31,14 +31,16 @@ int main(void)
 {
 	int i;
 /*%%*/	pthread_t hilos[N_HILOS];	/* para guardar todos los ID de threads  */
-	int hilo_args[N_HILOS];		/* para guardar argum. pasado a c/thread */
+	/* int hilo_args[N_HILOS];	*/
 
 	fprintf(stderr, "n_hilos=%d\n", N_HILOS);
 
 	/* Lanza los threads */
 	for (i=0; i<N_HILOS;i++) {
-		hilo_args[i]=i;
-/*%%*/		if (pthread_create(&hilos[i], NULL, hilo, (void*)&hilo_args[i]))
+		/* hilo_args[i]=i; */
+
+		/* LA proxima linea tiene un BUG ! */
+/*%%*/		if (pthread_create(&hilos[i], NULL, hilo, (void*)&i)) 
 			perror("pthread_create()");
 	}
 
@@ -56,7 +58,8 @@ void * hilo(void *arg)
 	pthread_t tid;
 /*%%*/	tid=pthread_self();	/* pthread_self: devuelve el THREAD ID */
 
-	n=snprintf(buf,sizeof(buf),"tid=%ld\n", (long)tid);
-	write(1, buf, n);
+	usleep(random()%20000);
+	n=snprintf(buf,sizeof(buf),"tid=%ld arg=%d\n", (long)tid, *(int*)arg);
+	write(STDOUT_FILENO, buf, n);
 /*%%*/	pthread_exit(NULL);	/* pthread_exit: termina y retorna exit_val */
 }
