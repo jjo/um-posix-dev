@@ -1,4 +1,4 @@
-/* $Id: hilos-1.c,v 1.5 2002/10/06 22:51:49 jjo Exp $ */
+/* $Id: hilos-1.c,v 1.6 2003/10/30 22:07:18 jjo Exp $ */
 /*
  * Objetivo: POSIX threads: Mostrar la creación de threads y la espera de finalización
  * 
@@ -31,27 +31,8 @@ struct hilo_arg {
 	int n_iter;
 };
 
-/* FUNCION del thread */
-void * hilo(void *arg)
-{
-	int i,n;
-	char buf[256];
-	pthread_t tid;
-	struct hilo_arg *ha=arg;
-	tid=pthread_self();
+void * hilo(void *arg);
 
-	n=snprintf(buf,sizeof(buf),"tid=%ld ", (long)tid);
-	write(1, buf, n);
-	
-	for (i=0;i<10;i++) {
-		/* dormir rando'micamente hasta 0.1 segundo */
-		//usleep((int) (100000.0*rand()/(RAND_MAX+1.0)));
-		/* evitar usar stdio en threads */
-		n=snprintf(buf,sizeof(buf),"%02d-", ha->num);
-		write(1, buf, n);
-	}
-	pthread_exit(NULL);
-}
 int main(int argc, const char *argv[]) 
 {
 	int i;
@@ -73,13 +54,11 @@ int main(int argc, const char *argv[])
 		return 255;
 	}
 
-	/* semilla para rand() , no relacionado con threads */
-	srand(time(NULL));
-
 	/* lanzado de los threads */
 	fprintf(stderr, "n_hilos=%d\n", n_hilos);
 	for (i=0; i<n_hilos;i++) {
 		hilo_args[i].num=i;
+		hilo_args[i].n_iter=20;
 		if (pthread_create(&hilos[i], NULL, hilo, (void*)&hilo_args[i]))
 			perror("pthread_create()");
 	}
@@ -91,4 +70,25 @@ int main(int argc, const char *argv[])
 	}
 
 	return 0;
+}
+/* FUNCION del thread */
+void * hilo(void *arg)
+{
+	int i,n;
+	char buf[256];
+	pthread_t tid;
+	struct hilo_arg *ha=arg;
+	tid=pthread_self();
+
+	n=snprintf(buf,sizeof(buf),"tid=%ld \n", (long)tid);
+	write(STDOUT_FILENO, buf, n);
+	
+	for (i=0;i<ha->n_iter;i++) {
+		/* dormir rando'micamente */
+		sched_yield();
+		/* evitar usar stdio en threads */
+		n=snprintf(buf,sizeof(buf),"%02d-", ha->num);
+		write(STDOUT_FILENO, buf, n);
+	}
+	pthread_exit(NULL);
 }
