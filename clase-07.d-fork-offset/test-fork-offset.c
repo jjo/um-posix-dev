@@ -3,7 +3,7 @@
 #include <fcntl.h>
 #include <sys/wait.h>
 
-#define ARCH "archivo.txt"
+#define ARCH "salida.txt"
 int main(void) 
 {
 	int status;
@@ -21,6 +21,6 @@ int main(void)
 		return 0;
 	}
 	wait(&status);
-	write(fd, "xxxx", 4);
+	write(fd, "Donde-stoy?", 4);
 	return 0;
 }
