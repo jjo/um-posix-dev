@@ -1,5 +1,5 @@
 /* 
- * $Id: hilo-prodcons.c,v 1.3 2004/10/15 19:50:25 jjo Exp $
+ * $Id: hilo-prodcons.c,v 1.4 2005/02/21 20:17:39 jjo Exp $
  * Autor: JuanJo Ciarlante <jjo@um.edu.ar>
  * Licencia: GPLv2
  *
@@ -21,6 +21,7 @@ void parse_args_or_die(int argc, const char *argv[], int *n_mensajes, int *n_con
 void *consumer(void *);
 void *producer(void *);
 
+sem_t SemaCantMsgProcesados;
 int main(int argc, const char *argv[])
 {
 	unsigned n_consumers, n_mensajes, i;
@@ -29,13 +30,15 @@ int main(int argc, const char *argv[])
 	parse_args_or_die(argc, argv, &n_mensajes, &n_consumers);
 	LaLista=lista_new(10);
 
+	sem_init(&SemaCantMsgProcesados,0,0);
 	for(i=1;i<=n_consumers;i++)
 		pthread_create(&tid_cons, NULL, consumer, (void*)i);
 
 	pthread_create(&tid_prod, NULL, producer, (void*)n_mensajes);
 	pthread_join(tid_prod, NULL);
 
-	//sleep(1); // truCHEx
+	while(n_mensajes--);
+		sem_wait(&SemaCantMsgProcesados);
 	lista_destroy(LaLista);
 	printf("Saliendo...\n");
 	return 0;
@@ -60,13 +63,14 @@ void *consumer(void *arg) {
 
 	pthread_detach(pthread_self());
 	while(1) {
-		usleep(10);
+		usleep(0);
 		m=lista_get(LaLista);
 		if (!m) break;
 		cant=snprintf(buf, sizeof buf -1, "                consumer[%02u] num=%d\n", hilo_num, m->num);
 		
 		write(STDOUT_FILENO, buf, cant);
 		free(m);
+		sem_post(&SemaCantMsgProcesados);
 	}
 	return NULL;
 }

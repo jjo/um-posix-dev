@@ -1,5 +1,5 @@
 /*
- * $Id: lista-sem.c,v 1.3 2004/10/15 19:50:25 jjo Exp $
+ * $Id: lista-sem.c,v 1.4 2005/02/21 20:17:39 jjo Exp $
  * Autor: JuanJo Ciarlante <jjo@um.edu.ar>
  * Licencia: GPLv2
  *
@@ -7,6 +7,7 @@
  */
 
 #include <stdio.h>
+#include <string.h>
 #include <stdlib.h>
 #include <glib.h>
 #include "lista.h"
@@ -26,6 +27,7 @@ struct lista *lista_new(int elem_max)
 	struct lista *l=malloc(sizeof *l);
 	if (elem_max)
 		fprintf(stderr, "WARNING: elem_max NO implementado para en " __FILE__ "\n");
+	memset(l, 0, sizeof *l);
 	pthread_mutex_init(&l->l_lock, NULL);
 	sem_init(&l->l_sem, 0, 0);
 	l->l_queue=g_queue_new();
@@ -33,6 +35,7 @@ struct lista *lista_new(int elem_max)
 }
 void lista_destroy(struct lista *lista)
 {
+	pthread_mutex_destroy(&lista->l_lock);
 	sem_destroy(&lista->l_sem);
 	g_queue_free(lista->l_queue);
 }
