@@ -1,4 +1,4 @@
-/* $Id: hilos-1.c,v 1.1 2002/09/16 21:10:14 jjo Exp $ */
+/* $Id: hilos-1.c,v 1.2 2002/09/27 21:13:08 jjo Exp $ */
 /*
  * Author: JuanJo Ciarlante <jjo@um.edu.ar>
  *
@@ -21,31 +21,45 @@
 
 #include <pthread.h>
 
+#define MAX_HILOS 100
+
+/* DATA para la funcion del thread */
 struct hilo_arg {
 	int num;
 	int n_iter;
 	char *id;
 };
 
+/* FUNCION del thread */
 void * hilo(void *arg)
 {
-	int i;
+	int i,n;
+	char buf[256];
+	pthread_t tid;
 	struct hilo_arg *ha=arg;
-	for (i=0;i<100;i++) {
-		printf("%d", ha->num);
+	tid=pthread_self();
+
+	n=snprintf(buf,sizeof(buf),"tid=%ld ", (long)tid);
+	write(1, buf, n);
+	
+	for (i=0;i<10;i++) {
+		/* dormir rando'micamente hasta 0.1 segundo */
+		usleep((int) (100000.0*rand()/(RAND_MAX+1.0)));
+		/* evitar usar stdio en threads */
+		n=snprintf(buf,sizeof(buf),"%02d-", ha->num);
+		write(1, buf, n);
 		sched_yield();
 	}
 	pthread_exit(NULL);
 }
-#define MAX_HILOS 100
 int main(int argc, const char *argv[]) 
 {
 	int i;
 	
+	/* para guardar todos los ID de threads (opcional) */
 	pthread_t hilos[MAX_HILOS];
+	/* ... y los DATA de c/thread */
 	struct hilo_arg hilo_args[MAX_HILOS];
-
-	char name[10];
 	int  n_hilos;
 
 	if (argc!=2) {
@@ -56,20 +70,21 @@ int main(int argc, const char *argv[])
 		fprintf(stderr, "ERROR: argumento(s) no valido(s) "
 			"n_hilos=%d",
 				n_hilos);
-
 		return 255;
 	}
 
+	/* semilla para rand() , no relacionado con threads */
+	srand(time(NULL));
+
+	/* lanzado de los threads */
 	fprintf(stderr, "n_hilos=%d\n", n_hilos);
-	
 	for (i=0; i<n_hilos;i++) {
-		sprintf(name, "hilito%02d", i);
 		hilo_args[i].num=i;
-		hilo_args[i].id=strdup(name);
 		if (pthread_create(&hilos[i], NULL, hilo, (void*)&hilo_args[i]))
 			perror("pthread_create()");
 	}
 
+	/* espera por finalizacio'n de TODOS */
 	for (i=0; i<n_hilos;i++) {
 		while(pthread_join(hilos[i], NULL));
 	}
