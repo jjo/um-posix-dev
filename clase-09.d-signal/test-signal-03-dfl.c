@@ -8,11 +8,11 @@
 
 void handler(int signum) {
 	fprintf(stderr, "OUch sig=%d\n(poniendo a DFL)\n", signum);
-	signal (signum, SIG_DFL);
+	signal (signum, SIG_DFL); /* deberiamos usar sigaction() */
 }
 int main(void) 
 {
-	signal(SIGINT, handler);
+	signal(SIGINT, handler); /* deberiamos usar sigaction() */
 	getchar();
 	return 0;
 }

@@ -13,7 +13,7 @@ void handler(int signum) {
 int main(void) 
 {
 	alarm(1);
-	signal(SIGALRM, handler);
+	signal(SIGALRM, handler); /* deberiamos usar sigaction() */
 	getchar();
 	return 0;
 }

@@ -4,7 +4,7 @@
 
 int main(void) 
 {
-	signal(SIGINT, SIG_IGN);
+	signal(SIGINT, SIG_IGN); /* deberiamos usar sigaction() */
 	getchar();
 	return 0;
 }

@@ -11,7 +11,7 @@ void handler(int signum) {
 }
 int main(void) 
 {
-	signal(SIGINT, handler);
+	signal(SIGINT, handler); /* deberiamos usar sigaction() */
 	getchar();
 	return 0;
 }
