@@ -1,3 +1,7 @@
+/* 
+ * $Id: test-signal-05-sigaction.c,v 1.2 2003/05/16 21:13:50 jjo Exp $
+ */
+
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>

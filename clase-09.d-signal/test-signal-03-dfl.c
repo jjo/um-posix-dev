@@ -1,4 +1,8 @@
 /* 
+ * $Id: test-signal-03-dfl.c,v 1.4 2003/05/16 21:13:50 jjo Exp $
+ */
+
+/* 
 #define _POSIX_SOURCE 
 */
 #include <stdio.h>
