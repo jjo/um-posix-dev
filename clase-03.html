@@ -1,13 +1,15 @@
+<!-- $Id -->
 <html>
-<head><title>Inform&aacute;tica III - Clase 3</title></head>
+<head><title>Informática III - Clase 3</title></head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
 <body>
 <hr>
-<h1>Estructuraci&oacute;n del proyecto</h1>
+<h1>Estructuración del proyecto</h1>
 	<ul>
 	<li>Fuentes
 		<ul>
 		<li>Interface: <tt>.h</tt>
-		<li>Implementación: <tt>.c</tt>
+		<li>Implementación: <tt>.c -&gt; .o</tt>
 		</ul>
 	<li>Entorno de trabajo
 		<ul>
@@ -18,10 +20,10 @@
 	<em>objectivo(s)</em>: <em>fuentes ...</em>
 		<em>commandos ...</em>
 </code></pre>
-			<li>Objetivos comunes:
+			<li>Objetivos típicos:
 				<ul compact>
-				<li> all:   crea todos los obj.
-				<li> clean: limpia
+				<li> all:   crea todos los "targets"
+				<li> clean: limpia "targets", objetos
 				<li> test:  prueba la aplicacion
 				<li> dist:  crea .tar
 				</ul>
@@ -47,6 +49,8 @@
 			<li> <tt>break</tt> <em>{funcion|linea}</em>
 			<li> <tt>cont, step</tt>
 			<li> <tt>bt</tt> (backtrace)
+			<li> <tt>print <em>variable</em></tt> 
+			<li> <tt>x <em>dir_memoria</em></tt> 
 		</ul>
 	<li>Ciclo edición, compilación y debugging
 	</ul>
