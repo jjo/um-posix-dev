@@ -1,9 +1,9 @@
 /*
- * $Id: holamundo_stdio.c,v 1.2 2003/03/24 13:21:50 jjo Exp $
+ * $Id: holamundo.c,v 1.1 2003/03/24 13:21:50 jjo Exp $
  */
 
-#include <stdio.h>
-
+#include <unistd.h>
+#include <string.h>
 /*
  * El entorno UN*X _hace_ uso del valor de retorno del main,
  * típicamente con contrucciones de shell que condicionan la 
@@ -13,14 +13,16 @@
  */
 #define HOLAMUNDO "Hola mundo\n"
 #define WARISSHIT "la guerra ES el standard error :/ \n"
+
 /* 
- * 	Usamos la biblioteca standard de I/O (stdio)
+ * 	Hacemos llamadas de bajo nivel (syscall al S.O.)
+ * 	en vez de usar la biblioteca standard de I/O (stdio)
  * 
- * 	Mas info: "man 3 printf"
+ * 	Mas info: "man 2 write" 
  */
 int main(void)
 {
-	printf(HOLAMUNDO);
-	fprintf(stderr, WARISSHIT);
+	write(STDOUT_FILENO, HOLAMUNDO, strlen(HOLAMUNDO)); 
+	write(STDERR_FILENO, WARISSHIT, strlen(WARISSHIT));
 	return 0;
 }
