@@ -1,0 +1,22 @@
+    Sockets, modelo TCP/IP y OSI
+
+                                     TCP/IP                       OSI    
+                            +------------------------+   +-----------------+
+                            |  Aplicación   H S F D  |   |   Aplicación    | 7
+socket(PF_INET,SOCK_DGRAM,0) _________      T M T N  |   |-----------------|
+socket(PF_INET,SOCK_STREAM,0) __       \    T T P S  |   |   Presentación  | 6
+                            |    \      \   P P : :  |   |-----------------|
+                            |----(*)----(*)----------| - |   Sesión        | 5
+                            |    TCP  | UDP   |      |   |-----------------|
+socket(PF_INET,SOCK_RAW,...)  ---\    :       :      |   |   Transporte    | 4
+                            |----(*)-----------------| - |-----------------|
+socket(PF_PACKET,SOCK_RAW,...) __.    IP+ICMP        |   |   Red           | 3 
+                            |----(*)-----------------| - |-----------------|
+                            |      Acceso al         |   |   Enlace        | 2
+                            |        Medio           |   |-----------------|
+                            |                        |   |   Física        | 1
+                            +------------------------+   +-----------------+
+
+
+$Id: Diagrama-socket.txt,v 1.1 2003/08/15 21:47:37 jjo Exp $
+vim:sw=2:ts=2:ai
