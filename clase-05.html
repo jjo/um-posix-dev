@@ -1,0 +1,17 @@
+<table>
+<tr>
+<th>-</th><th>STDLIB</th><th>lowlevel I/O</th>
+</tr>
+<tr>
+<td>abrir</td>
+	<td>FILE *f=fopen("archivo", "rw");</td>
+	XXX TAbla de comparaci&oacute;n stdlib/unistd XXX
+	ej. de open:
+		O_RDWR solamente: no lo crea
+		O_RDWR | O_CREATE, 0: permisos ?
+		O_RDWR | O_CREATE, 0666: umask
+		O_RDWR | O_CREATE, 0666: no trunca (escribir menos que la vez anterior)
+		O_RDWR | O_CREATE | O_TRUNCATE
+		
+	introducci&oacute;n a fork
+</table>
