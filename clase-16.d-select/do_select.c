@@ -37,11 +37,16 @@ int main(void) {
 		FD_ZERO(&rfds);
 		FD_ZERO(&wfds);
 		FD_ZERO(&efds);
-		FD_SET(sockfd, &rfds);
+
+		/* espero "ready to read" en red y stdin */
+		FD_SET(sockfd,       &rfds);
 		FD_SET(STDIN_FILENO, &rfds);
-		FD_SET(sockfd, &efds);
+
+		/* espero "excepciones" en red y stdin */
+		FD_SET(sockfd,       &efds);
 		FD_SET(STDIN_FILENO, &efds);
-		/* recargar timer para CADA loop */
+
+		/* recargo timer para CADA loop en 5segs*/
 		tv.tv_sec = 5;
 		tv.tv_usec= 0;
 
@@ -52,6 +57,14 @@ int main(void) {
 		if (nselect==0) {
 			fprintf(stderr, "** TICK **\n");
 			continue;
+		}
+		if (FD_ISSET(STDIN_FILENO, &efds)) {
+			fprintf(stderr, "** stdin EXCEPTION\n");
+			break;
+		}
+		if (FD_ISSET(sockfd, &efds)) {
+			fprintf(stderr, "** red EXCEPTION\n");
+			break;
 		}
 		/* ver cual descriptor esta' listo ... */
 		if (FD_ISSET(STDIN_FILENO, &rfds)) {
