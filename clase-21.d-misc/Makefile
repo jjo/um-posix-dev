@@ -1,7 +1,7 @@
 CFLAGS=-g -Wall $(COPTS)
-TARGETS=filesys-dir.c filesys-stat.c
+TARGETS=filesys-dir
 
 all: $(TARGETS) 
 
 clean:  
-	rm -f *.o *~ $(TARGETS) $(TARGETS_PTH) $(LIBS) core
+	rm -f *.o *~ $(TARGETS) $(LIBS) core
