@@ -1,5 +1,7 @@
-/* $Id: testcaca.c,v 1.1 2004/10/22 19:44:23 jjo Exp $ */
-/* vim: ts=2 */
+/* $Id: testcaca.c,v 1.2 2004/10/22 19:50:51 jjo Exp $ */
+/* 
+ * vim: ts=2:aw
+ */
 #include <stdlib.h>
 #include <caca.h>
 
@@ -8,6 +10,7 @@ int main(void)
 	int event;
 	int ch;
 	struct caca_sprite *carita=NULL;
+
 	if (caca_init()) 
 		return 1;
 	caca_set_feature(CACA_ANTIALIASING_PREFILTER);
