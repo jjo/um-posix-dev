@@ -1,8 +1,8 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
-
 #include "libopen.h"
+
 /**  Nombre del  "ejecutable", es decir: argv[0] pasado a main() */
 const char *progname;
 
@@ -12,9 +12,9 @@ void help(void)
 }
 int main(int argc, char * const argv[])
 {
-	int fd;		/* file descriptor */
-	int numero_de_func;
-	const char *fname;
+	int fd;			/* file descriptor */
+	int numero_de_func;	/* nro de funcion a invocar */
+	const char *fname; 	/* nombre de archivo a abrir */
 	progname = argv[0];
 
 	if (argc != 3) {
