@@ -1,4 +1,4 @@
-/* $Id: hilos-0.c,v 1.3 2004/09/10 16:55:35 jjo Exp $ */
+/* $Id: hilos-0.c,v 1.4 2004/10/01 20:06:35 jjo Exp $ */
 /*
  * Objetivo: POSIX threads: Mostrar la creación de threads y la espera de finalización
  * 
@@ -24,7 +24,7 @@
 #include <pthread.h>
 
 #define N_HILOS 10
-#define SIN_BUG 1
+#define SIN_BUG 0
 
 void *hilo (void *arg);
 

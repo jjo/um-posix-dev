@@ -1,4 +1,4 @@
-/* $Id: hilos-2.c,v 1.3 2004/09/10 16:55:35 jjo Exp $ */
+/* $Id: hilos-2-sem.c,v 1.1 2004/10/01 20:06:35 jjo Exp $ */
 /*
  * Author: JuanJo Ciarlante <jjo@um.edu.ar>
  *
@@ -22,36 +22,23 @@
 #include <pthread.h>
 #include <semaphore.h>
 
+void usage(int, int);
 #define MAX_HILOS 100
-
 /*
- * DO_SYNC indica si se usara'n primitivas de sync 
+ * do_sync indica si se usara'n primitivas de sync 
  * para acceso a la variable global 
  */
-
-/* Probar con DO_SYNC en 0 o' 1 */
-#ifndef DO_SYNC
-#define DO_SYNC 0
-#endif
-
-/* 
- * Solo si DO_SYNC en 1
- * 
- * USE_SEM 1 -> semaforos
- * USE_SEM 0 -> mutexes
- */
-#ifndef USE_SEM
-#define USE_SEM 0
-#endif
+int do_sync=1;
 
 int elentero;
+const char *nombre_prog;
 
 /* DATA para la funcion del thread */
 struct hilo_arg {
 	int num;
 	int n_iter;
-	sem_t *sem_varp, *sem_arranquep;
-	pthread_mutex_t *mutex;
+	sem_t *sem_arranquep;
+	sem_t *sem_varp;
 };
 
 /* FUNCION del thread */
@@ -67,29 +54,21 @@ void * hilo(void *arg)
 		pthread_exit(NULL);
 	}
 	for (i=0;i<ha->n_iter;i++) {
-#if DO_SYNC
-#if USE_SEM
-		sem_wait(ha->sem_varp);
-#else
-		pthread_mutex_lock(ha->mutex);
-#endif
-#endif
+		if (do_sync) {
+			sem_wait(ha->sem_varp);
+		}
 		a=elentero;
 		a++;
 		n=snprintf(buf,sizeof(buf),"%02d-\b\b\b", ha->num);
 		write(STDOUT_FILENO, buf, n);
 		elentero=a;
-#if DO_SYNC
-#if USE_SEM
-		sem_post(ha->sem_varp);
-#else
-		pthread_mutex_unlock(ha->mutex);
-#endif
-#endif
+		if (do_sync) {
+			sem_post(ha->sem_varp);
+		}
 	}
 	pthread_exit(NULL);
 }
-int main(int argc, const char *argv[]) 
+int main(int argc, char **argv) 
 {
 	int i;
 	
@@ -99,40 +78,39 @@ int main(int argc, const char *argv[])
 	struct hilo_arg hilo_args[MAX_HILOS];
 	char name[10];
 	sem_t sem_arranque;
-#if DO_SYNC
-#if USE_SEM
 	sem_t sem_var;
-#else
-	pthread_mutex_t mutex;
-#endif
-#endif
+
 	int n_hilos;   /* cant de hilos a lanzar */
 	int n_iter;    /* cant de iteraciones de c/hilo */
 
+	nombre_prog = argv[0];
+
+	/* Validacion ... */
+
+	while((i=getopt(argc, argv, "n"))>=0) {
+		switch(i) {
+			case 'n': do_sync=0;break;
+			default: usage(n_hilos, n_iter);
+		}
+	}
+	argc-=(optind-1);
+	argv+=(optind-1);
 	if (argc!=3) {
-		fprintf(stderr, "ERROR: uso: %s n_hilos n_iter \n", argv[0]);
+		fprintf(stderr, "ERROR: uso: %s [-n]  n_hilos n_iter \n", argv[0]);
 		return 255;
 	}
 	if (    (n_hilos=atoi(argv[1])) <= 0  || n_hilos > MAX_HILOS ||
 		(n_iter=atoi(argv[2]))  <= 0  ) {
-		fprintf(stderr, "ERROR: argumento(s) no valido(s) "
-			"n_hilos=%d, n_iter=%d\n",
-				n_hilos, n_iter);
-
-		return 255;
+		usage(n_hilos, n_iter);
 
 	}
-	fprintf(stderr, "n_hilos=%d, n_iter=%d\n",
-				n_hilos, n_iter);
+	fprintf(stderr, "do_sync=%d n_hilos=%d, n_iter=%d\n",
+				do_sync, n_hilos, n_iter);
 	
 	sem_init(&sem_arranque, 0, 0);
-#if DO_SYNC
-#if USE_SEM
-	sem_init(&sem_var, 0, 1);
-#else
-	pthread_mutex_init(&mutex, NULL);
-#endif
-#endif
+	if (do_sync) {
+		sem_init(&sem_var, 0, 1);
+	}
 
 	/* lanzado de los threads */
 	fprintf(stderr, "n_hilos=%d\n", n_hilos);
@@ -142,13 +120,9 @@ int main(int argc, const char *argv[])
 		hilo_args[i].num=i;
 		sprintf(name, "\r%02d", i);
 		hilo_args[i].sem_arranquep=&sem_arranque;
-#if DO_SYNC
-#if USE_SEM
-		hilo_args[i].sem_varp=&sem_var;
-#else
-		hilo_args[i].mutex=&mutex;
-#endif
-#endif
+		if (do_sync) {
+			hilo_args[i].sem_varp=&sem_var;
+		}
 		hilo_args[i].n_iter=n_iter;
 		if (pthread_create(&hilos[i], NULL, hilo, (void*)&hilo_args[i]))
 			perror("pthread_create()");
@@ -167,4 +141,11 @@ int main(int argc, const char *argv[])
 
 	printf("\ntotal'= %d\n", elentero);
 	return 0;
+}
+void usage(int h, int i) {
+	fprintf(stderr, "ERROR: argumento(s) no valido(s) "
+			"(n_hilos=%d, n_iter=%d)\n",
+			h, i);
+
+	exit(255);
 }
