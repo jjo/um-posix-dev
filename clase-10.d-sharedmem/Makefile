@@ -1,6 +1,6 @@
 CC=gcc
 CFLAGS=-g -Wall
-TARGETS=test-shm-write test-shm-read
+TARGETS=test-shm
 
 all: $(TARGETS)
 
