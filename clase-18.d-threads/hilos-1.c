@@ -1,4 +1,4 @@
-/* $Id: hilos-1.c,v 1.2 2002/09/27 21:13:08 jjo Exp $ */
+/* $Id: hilos-1.c,v 1.3 2002/09/27 23:36:31 jjo Exp $ */
 /*
  * Author: JuanJo Ciarlante <jjo@um.edu.ar>
  *
@@ -27,7 +27,6 @@
 struct hilo_arg {
 	int num;
 	int n_iter;
-	char *id;
 };
 
 /* FUNCION del thread */

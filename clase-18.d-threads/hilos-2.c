@@ -1,4 +1,4 @@
-/* $Id: hilos-3.c,v 1.1 2002/09/16 21:10:14 jjo Exp $ */
+/* $Id: hilos-2.c,v 1.1 2002/09/27 23:37:09 jjo Exp $ */
 /*
  * Author: JuanJo Ciarlante <jjo@um.edu.ar>
  *
@@ -22,9 +22,9 @@
 #include <pthread.h>
 #include <semaphore.h>
 
-/* Probar con USE_SEM en 0 o' 1 */
-#ifndef USE_SEM
-#define USE_SEM 1
+/* Probar con DO_SYNC en 0 o' 1 */
+#ifndef DO_SYNC
+#define DO_SYNC 0
 #endif
 
 #ifndef USE_MUTEX
@@ -35,59 +35,60 @@
 #define SEMA_ARRANQUE 1
 #define MAX_HILOS 50
 
+int elentero;
+
 struct hilo_arg {
-	int *int_p;
+	int num;
+	int n_iter;
 	sem_t *sem;
 	pthread_mutex_t *mutex;
-	int n_iter;
-	char *id;
 };
 
 void * hilo(void *arg)
 {
+	int i,n;
+	char buf[256];
 	int a;
-	int i;
-	struct hilo_arg *hilo_arg=arg;
-#if USE_SEM
-	if (sem_wait(&hilo_arg->sem[SEMA_ARRANQUE])) {
+	struct hilo_arg *ha=arg;
+#if DO_SYNC
+	if (sem_wait(&ha->sem[SEMA_ARRANQUE])) {
 		perror("hilo: sem_wait()");
 		pthread_exit(NULL);
 	}
-#endif /* USE_SEM */
-	for (i=0;i<hilo_arg->n_iter;i++) {
-#if USE_SEM
+#endif /* DO_SYNC */
+	for (i=0;i<ha->n_iter;i++) {
+#if DO_SYNC
 #if USE_MUTEX
-		pthread_mutex_lock(hilo_arg->mutex);
+		pthread_mutex_lock(ha->mutex);
 #else
-		sem_wait(&hilo_arg->sem[SEMA_VAR]);
+		sem_wait(&ha->sem[SEMA_VAR]);
 #endif /* USE_MUTEX */
-#endif /* USE_SEM */
-		a=*hilo_arg->int_p;
+#endif /* DO_SYNC */
+		a=elentero;
 		a++;
-		if (hilo_arg->id) write(2,hilo_arg->id,strlen(hilo_arg->id));
-		*hilo_arg->int_p=a;
+		n=snprintf(buf,sizeof(buf),"%02d-\b\b\b", ha->num);
+		write(1, buf, n);
+		elentero=a;
 
-#if USE_SEM
+#if DO_SYNC
 #if USE_MUTEX
-		pthread_mutex_unlock(hilo_arg->mutex);
+		pthread_mutex_unlock(ha->mutex);
 #else
-		sem_post(&hilo_arg->sem[SEMA_VAR]);
+		sem_post(&ha->sem[SEMA_VAR]);
 #endif /* USE_MUTEX */
-#endif /* USE_SEM */
+#endif /* DO_SYNC */
 	}
 	pthread_exit(NULL);
 }
 int main(int argc, const char *argv[]) 
 {
-	int elentero;
 	int i;
 	pthread_t hilos[MAX_HILOS];
 	struct hilo_arg hilo_args[MAX_HILOS];
-	pthread_attr_t attr;
 	char name[10];
-#if USE_SEM
+#if DO_SYNC
 	sem_t sem[2];
-#endif /* USE_SEM */
+#endif /* DO_SYNC */
 #if USE_MUTEX
 	pthread_mutex_t mutex;
 #endif
@@ -110,41 +111,36 @@ int main(int argc, const char *argv[])
 	fprintf(stderr, "n_hilos=%d, n_iter=%d\n",
 				n_hilos, n_iter);
 	
-#if USE_SEM
+#if DO_SYNC
 	sem_init(&sem[SEMA_VAR], 0, 1);
 	sem_init(&sem[SEMA_ARRANQUE], 0, 0);
-#endif /* USE_SEM */
+#endif /* DO_SYNC */
 #if USE_MUTEX
 	pthread_mutex_init(&mutex, NULL);
 #endif
 
-	pthread_attr_init(&attr);
-	pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
-
 	elentero=0;
 	printf("\ntotal = %d (%d*%d)\n", n_hilos*n_iter, n_hilos, n_iter);
 	for (i=0; i<n_hilos;i++) {
+		hilo_args[i].num=i;
 		sprintf(name, "\r%02d", i);
-		hilo_args[i].int_p=&elentero;
-#if USE_SEM
+#if DO_SYNC
 		hilo_args[i].sem=sem;
 #if USE_MUTEX
 		hilo_args[i].mutex=&mutex;
 #endif
-#endif /* USE_SEM */
+#endif /* DO_SYNC */
 		hilo_args[i].n_iter=n_iter;
-		hilo_args[i].id=strdup(name);
-		if (pthread_create(&hilos[i], &attr, hilo, (void*)&hilo_args[i]))
+		if (pthread_create(&hilos[i], NULL, hilo, (void*)&hilo_args[i]))
 			perror("pthread_create()");
 	}
-	pthread_attr_destroy(&attr);
-#if USE_SEM /* compila condicionalmente */
+#if DO_SYNC /* compila condicionalmente */
 	fprintf(stderr, "%d hilos creados... esperando Enter->", n_hilos);
 	getchar();write(1,"\n",1);
 	for (i=0; i<n_hilos;i++) {
 		sem_post(&sem[SEMA_ARRANQUE]);
 	}
-#endif /* USE_SEM */
+#endif /* DO_SYNC */
 
 	for (i=0; i<n_hilos;i++) {
 		while(pthread_join(hilos[i], NULL));
