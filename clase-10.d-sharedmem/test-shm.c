@@ -70,14 +70,15 @@ int main(int argc, char * const argv[])
 	if (!ptr)    { ouch="obtener memoria compartida";goto err;}
 	
 	if (opt_write) {
+		/* opcion -w: escribe en memoria */
 		int resto=MEMSIZE-1;	/* lugar para el '\0' */
-		fprintf(stderr, "Leyendo de stdin ...\n");
+		fprintf(stderr, "Leyendo de stdin ...resto\n");
 		/* 
 		 * consume el stdin, dejando su contenido
 		 * DIRECTAMENTE en ptr
 		 */
 		while( (count=read(STDIN_FILENO, ptr, resto)) >0 ) {
-			resto=-count;
+			resto-=count;
 			if (resto<0) {
 				fprintf(stderr, "*** ERROR: se acabo' el espacio\n");
 				break;
@@ -87,7 +88,9 @@ int main(int argc, char * const argv[])
 		if (count<0) {ouch="read()"; goto err;}
 		/* soy un lamer: caracter de fin de string :P */
 		ptr[count]='\0';
+		
 	} else if(opt_read) {
+		/* opcion -r: lee desde memoria */
 		fprintf(stderr, "Escribiendo en stdout ...\n");
 		printf(ptr);
 	}
