@@ -5,7 +5,10 @@
 struct lista {
 	struct list_head l_head;
 	pthread_mutex_t l_lock;
-	sem_t l_sem;
+	union {
+		sem_t l_sem;
+		pthread_cond_t l_cond;
+	} u;
 };
 /* cada mensaje va a ser 1elem. de la lista */
 struct mensaje {

@@ -23,5 +23,6 @@ int http_parser_process_line(struct http_parser *ht, const char *line)
 			fprintf(stderr, "request not supported: \"%s\"\n", line);
 		}
 	}
+	ht->linenum++;
 	return 0;
 }

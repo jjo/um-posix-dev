@@ -1,16 +1,13 @@
 CFLAGS=-g -Wall $(COPTS)
-TARGETS=hilo-prodcons-sem simple-trigger-condvar
+TARGETS=hilo-prodcons-sem hilo-prodcons-condvar
 LDLIBS=-lpthread
 
 all: $(TARGETS) 
 
-hilo-prodcons-sem: hilo-prodcons-sem.o lista.o
+hilo-prodcons-sem: hilo-prodcons.o lista-sem.o
 	$(CC) -o $(@) $^ $(LDLIBS)
 
-hilo-sync-sem: hilo-main.o libjj_sem.o
-	$(CC) -o $(@) $^ $(LDLIBS)
-
-hilo-sync-rwlock: hilo-main.o libjj_rwlock.o
+hilo-prodcons-condvar: hilo-prodcons.o lista-condvar.o
 	$(CC) -o $(@) $^ $(LDLIBS)
 
 clean:  
