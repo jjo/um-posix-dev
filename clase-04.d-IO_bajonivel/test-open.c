@@ -3,7 +3,8 @@
 #include <stdlib.h>
 
 #include "libopen.h"
-const char *progname;	/* nombre del  "ejecutable" */
+/**  Nombre del  "ejecutable", es decir: argv[0] pasado a main() */
+const char *progname;
 
 void help(void)
 {

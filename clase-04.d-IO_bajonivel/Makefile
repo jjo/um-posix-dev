@@ -26,3 +26,5 @@ test4: test-open
 
 clean:  
 	rm -f *.o *~ $(TARGET) core archivo*txt
+
+-include ../doxygen/Makefile.dox
