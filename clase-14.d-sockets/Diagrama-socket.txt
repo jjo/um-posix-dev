@@ -1,5 +1,13 @@
     Sockets, modelo TCP/IP y OSI
 
+Protocol families (ej):
+   PF_UNIX:    locales, en filesys
+	 PF_INET:    TCP/IP
+	 PF_PACKET:  link (capa 2)
+	 PF_KEY:     IPSec
+	 PF_NETLINK: Linux: config. avanzada de networking
+
+
                                      TCP/IP                       OSI    
                             +------------------------+   +-----------------+
                             |  Aplicación   H S F D  |   |   Aplicación    | 7
@@ -17,6 +25,5 @@ socket(PF_PACKET,SOCK_RAW,...) __.    IP+ICMP        |   |   Red           | 3
                             |                        |   |   Física        | 1
                             +------------------------+   +-----------------+
 
-
-$Id: Diagrama-socket.txt,v 1.1 2003/08/15 21:47:37 jjo Exp $
+$Id: Diagrama-socket.txt,v 1.2 2003/08/15 21:52:40 jjo Exp $
 vim:sw=2:ts=2:ai
