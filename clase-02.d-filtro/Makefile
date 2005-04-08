@@ -1,6 +1,6 @@
-# $Id: Makefile,v 1.3 2003/03/28 18:28:45 jjo Exp $
+# $Id: Makefile,v 1.4 2005/04/08 20:59:01 jjo Exp $
 CFLAGS=-g -Wall
-TARGETS=filtro filtro_stdio
+TARGETS=filtro filtro_stdio rot13
 
 all: $(TARGETS)
 
