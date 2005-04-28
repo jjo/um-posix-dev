@@ -17,7 +17,9 @@ static int open_1_cero(const char *fname)
 static int open_2_creat(const char *fname)
 {
 	fprintf(stderr, "-> open(\"%s\", O_CREAT, 0)\n", fname);
-	return open (fname, O_CREAT, 0);
+	int fd= open (fname, O_CREAT|O_RDWR, 0);
+	write(fd, "hola", 5);
+	return fd;
 }
 /**
  *  Invoca open con flags=O_CREAT, mode=0666
@@ -33,7 +35,7 @@ static int open_3_creat_mode(const char *fname)
 static int open_4_creat_mode_umask(const char *fname)
 {
 	umask(0000);
-	fprintf(stderr, "-> umask(0777);open(\"%s\", O_CREAT, 0666)\n", fname);
+	fprintf(stderr, "-> umask(0000);open(\"%s\", O_CREAT, 0666)\n", fname);
 	return open (fname, O_CREAT, 0666);
 }
 

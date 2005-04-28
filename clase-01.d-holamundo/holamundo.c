@@ -1,15 +1,15 @@
 /*
- * $Id: holamundo.c,v 1.2 2004/03/12 17:42:25 jjo Exp $
+ * $Id: holamundo.c,v 1.3 2005/04/28 13:43:27 jjo Exp $
  */
 
 #include <unistd.h>
 #include <string.h>
 /*
  * El entorno UN*X _hace_ uso del valor de retorno del main,
- * típicamente con contrucciones de shell que condicionan la 
- * lógica en base al "exit status" del comando (0: Ok).
+ * tipicamente con contrucciones de shell que condicionan la 
+ * logica en base al "exit status" del comando (0: Ok).
  *
- * De allí que "main" devuelva un entero.
+ * De alli que "main" devuelva un entero.
  */
 #define HOLAMUNDO "Hola mundo\n"
 #define ERRHOLA "ERROR: el mundo no responde\n"
