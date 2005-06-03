@@ -1,6 +1,6 @@
-/* $Id: test-filedes.c,v 1.2 2004/04/30 18:41:14 jjo Exp $ */
+/* $Id: test-filedes.c,v 1.3 2005/06/03 17:36:15 jjo Exp $ */
 /*
- * Objetivo: Mostrar la utilización de descriptores de archivo (fd) mediante
+ * Objetivo: Mostrar la utilizacio'n de descriptores de archivo (fd) mediante
  *           open(), dup(), dup2()
  * 
  * Author: JuanJo Ciarlante <jjo@um.edu.ar>
@@ -69,7 +69,7 @@ int main(int argc, char * const argv[])
 int ejecuto_cmd(const char *cmd) 
 {
 	time_t curtime;		/* tiempo actual */
-	int status; 		/* status de terminación del system() */
+	int status; 		/* status de terminacion del system() */
 	time(&curtime);
 	printf("* COMIENZO -- %s\n", ctime(&curtime));
 	status=system(cmd);
