@@ -10,3 +10,5 @@ $(TARGET): $(TARGET).o
 
 clean:  
 	rm -f *.o *~ $(TARGET) core archivo*txt
+
+-include ../doxygen/Makefile.dox
