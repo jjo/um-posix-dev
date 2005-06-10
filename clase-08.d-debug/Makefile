@@ -1,10 +1,9 @@
 CFLAGS=-g -Wall
-TARGETS=test-mem test-debug test-debug-efence
+TARGETS=test-mem test-debug 
 
 all: $(TARGETS)
 
-test-debug-efence: test-debug.o
-	$(CC) -o $(@) $(^) -lefence
-
+memcheck: test-mem
+	valgrind --tool=memcheck ./test-debug
 clean:  
 	rm -f *.o *~ $(TARGETS) core
