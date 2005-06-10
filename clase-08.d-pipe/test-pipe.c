@@ -2,7 +2,8 @@
 #include <unistd.h>
 #include <sys/wait.h>
 
-/* Este ejemplo falla (a propo'sito, claro esta')  
+/* 
+ * Este ejemplo falla (a propo'sito, claro esta')  
  * porque el padre se queda "esperando" ... porque?
  */
 int main(void) {
@@ -21,7 +22,6 @@ int main(void) {
 		write(fds[1], "012345678 ", 10);
 		return 0;
 	}
-	close(fds[1]);
 	/* leo en el lado lectura ... */
 	while((nread=read(fds[0], buf, sizeof(buf)-1)) > 0) {
 		buf[nread-1]=0;
