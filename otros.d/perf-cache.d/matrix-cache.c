@@ -1,4 +1,4 @@
-/* $Id */
+/* $Id: matrix-cache.c,v 1.2 2005/08/04 15:05:37 jjo Exp $ */
 /* Muestra la diferencia de velocidad entre loop externo por filas o columnas,
  * causada por un buen/mal uso de cache
  */
