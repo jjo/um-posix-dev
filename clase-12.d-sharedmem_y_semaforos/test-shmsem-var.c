@@ -1,4 +1,4 @@
-/* $Id: test-shmsem-var.c,v 1.10 2004/08/20 21:22:14 jjo Exp $ */
+/* $Id: test-shmsem-var.c,v 1.11 2005/08/26 21:14:27 jjo Exp $ */
 /*
  * Author: JuanJo Ciarlante <jjo@um.edu.ar>
  *
@@ -34,7 +34,7 @@
 #define SEM_de_ARRANQUE	1
 #define CANT_SEMS	2
 
-#define MAX_HILOS 150
+#define MAX_HIJOS 150
 
 /* 
  * variable global que indica si usar semaforos para
@@ -67,7 +67,7 @@ void hilo(int *int_p, int sem_id, int n_iter, char *id)
 	}
 }
 void usage(void) {
-	fprintf(stderr, "ERROR: uso: %s [-n] n_hilos n_iter \n", nombre_prog);
+	fprintf(stderr, "ERROR: uso: %s [-n] n_hijos n_iter \n", nombre_prog);
 	exit(1);
 }
 int main(int argc, char *const argv[]) 
@@ -78,7 +78,7 @@ int main(int argc, char *const argv[])
 	key_t shm_key=SHM_KEY;	/* comodidad: uso la misma KEY para sharedmem y ... */
 	key_t sem_key=SEM_KEY;	/* ... set de semaforos */
 	int sem_id;	/* id del set de semaforos */
-	int n_hilos;	/* cant de hilos a lanzar */
+	int n_hijos;	/* cant de hijos a lanzar */
 	int n_iter;	/* cant de iteraciones de c/hilo */
 
 	nombre_prog = argv[0];
@@ -96,18 +96,18 @@ int main(int argc, char *const argv[])
 	if (argc!=3) {
 		usage();
 	}
-	if (    (n_hilos=atoi(argv[1])) <= 0  || 
+	if (    (n_hijos=atoi(argv[1])) <= 0  || 
 		(n_iter=atoi(argv[2]))  <= 0  || 
-		 n_hilos > MAX_HILOS ) {
+		 n_hijos > MAX_HIJOS ) {
 		fprintf(stderr, "ERROR: argumento(s) no valido(s) "
-			"n_hilos=%d, n_iter=%d\n",
-				n_hilos, n_iter);
+			"n_hijos=%d, n_iter=%d\n",
+				n_hijos, n_iter);
 
 		return 255;
 
 	}
-	fprintf(stderr, "use_sem=%d n_hilos=%d, n_iter=%d\n",
-			use_sem, n_hilos, n_iter);
+	fprintf(stderr, "use_sem=%d n_hijos=%d, n_iter=%d\n",
+			use_sem, n_hijos, n_iter);
 	
 	/* creacion del segmento de shared mem */
 	int_p=shm_create(shm_key, 4096, IPC_CREAT|0666, 0);
@@ -122,9 +122,9 @@ int main(int argc, char *const argv[])
 	 * lanza los hijos, los cuales quedara'n durmiendo en el 
 	 * semaforo 
 	 */
-	printf("\ntotal = %d (%d*%d)\n", n_hilos*n_iter, n_hilos, n_iter);
+	printf("\ntotal = %d (%d*%d)\n", n_hijos*n_iter, n_hijos, n_iter);
 
-	for (i=0; i<n_hilos;i++) {
+	for (i=0; i<n_hijos;i++) {
 		/* "nombre" de c/hijo */
 		sprintf(name, "\r%02d", i);
 		if (fork()==0) { 
@@ -133,7 +133,7 @@ int main(int argc, char *const argv[])
 		}
 	}
 
-	fprintf(stderr, "%d hilos creados... esperando Enter->", n_hilos);
+	fprintf(stderr, "%d hijos creados... esperando Enter->", n_hijos);
 	getchar();write(1,"\n",1);
 
 	/* inicializo el "entero compartido", y el semaforo de la variable */
@@ -141,10 +141,10 @@ int main(int argc, char *const argv[])
 	mi_sema_up(sem_id, SEM_de_VARIABLE);
 
 	/* 
-	 * se~aliza n_hilos simulta'neamente, aqui' n_hilos es la cant. de 
+	 * se~aliza n_hijos simulta'neamente, aqui' n_hijos es la cant. de 
 	 * "recursos" a sumar al semaforo 
 	 */
-	mi_sema_up_flags(sem_id, SEM_de_ARRANQUE, n_hilos, 0);
+	mi_sema_up_flags(sem_id, SEM_de_ARRANQUE, n_hijos, 0);
 
 	/* espera la muerte de todos los hijos */
 	while(waitpid(-1, NULL, 0)>0);
