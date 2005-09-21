@@ -37,7 +37,7 @@ int main(int argc, const char *argv[])
 	 */
 	memset(&addr_in, 0, sizeof(struct sockaddr_in));
 	addr_in.sin_family = AF_INET;
-	addr_in.sin_addr.s_addr = INADDR_ANY;
+	addr_in.sin_addr.s_addr = htonl(INADDR_ANY);
 	addr_in.sin_port = htons(port);
 
 	/* 
