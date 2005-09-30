@@ -1,9 +1,9 @@
 CFLAGS=-g -Wall $(COPTS)
-TARGETS=tcp-server
+TARGETS=tcp-server tcp-server2
 
 all: $(TARGETS) 
 
-tcp-server: tcp-server.o $(LIBS)
+%: %.o $(LIBS)
 	$(CC) $(LDFLAGS) -o $@ $^ $(LDLIBS) 
 clean:  
 	rm -f *.o *~ $(TARGETS) $(LIBS) core

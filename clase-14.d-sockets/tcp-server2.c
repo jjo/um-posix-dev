@@ -37,10 +37,9 @@ int main(int argc, const char *argv[])
 	 */
 	memset(&addr_in, 0, sizeof(struct sockaddr_in));
 	addr_in.sin_family = AF_INET;
-	addr_in.sin_addr.s_addr = htonl(INADDR_ANY);
+	addr_in.sin_addr.s_addr = ntohl(INADDR_ANY);
 	addr_in.sin_port = htons(port);
 
-#if 1
 	/* 
 	 * Por si quedo' semi-cerrado recie'n: fuerzo reuso
 	 */
@@ -48,7 +47,6 @@ int main(int argc, const char *argv[])
 	if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, (char *) &opt, sizeof(opt))<0) {
 		perror("setsockopt()");return 1;
 	}
-#endif
 
 	/* 
 	 * bind(): me ligo a un address:port 
@@ -70,7 +68,7 @@ int main(int argc, const char *argv[])
 	/* 
 	 * accept(): duermo hasta que entre una conexion 
 	 */
-	while ((servfd=accept(sockfd, NULL, 0))>=0) {
+	while ((servfd=accept(sockfd, NULL, 0))>0) {
 		switch(fork()) {
 			case 0: 
 				/* hijo */
@@ -92,31 +90,21 @@ int main(int argc, const char *argv[])
 }
 
 void servicio(int fd) {
-	const char *array[] = { "TRES\n", "DOS\n", "UNO\n", "b00M!\n", NULL };
-	const char **elemp=array;
-	char buf[1024];
-	char *str=buf;
-	FILE *f;
+	char buf_in[10240];
+	char buf_out[1024];
+	char path[1024];
+	int nread,n2;
 
-	if ( (f=fdopen(fd, "r+")) == NULL ) {
-		perror("fdopen()");
-		exit(1);
-	}
-	fprintf(f,"Hola, aqui %s ...\ntipea y termina con 2 <Enters>\n",
-			getlogin());
-	fflush(f);
-	while(fgets(str, sizeof(buf)-(str-buf), f)) {
-		if (str[0]=='\r' || str[0]=='\n') break;
-		str+=strlen(str);
-	}
-	setbuf(f, NULL);
-	/* muestro string */
-	fprintf(f,"STR=%s\n", buf);
-	/* cuenta regresiva :) */
-	for(;*elemp;elemp++) {
-		fputs(*elemp, f);
-		usleep(400000);
-	}
-	fclose(f);
+	nread=read(fd, buf_in, sizeof (buf_in));
+	if (nread<=0) goto out;
+
+	if (sscanf(buf_in, "GET %s", path) != 1) goto out;
+	
+	n2=snprintf(buf_out, sizeof buf_out,
+		"HTTP/1.0 200 Ok baby ;-)\r\nContent-type: text/html\r\n\r\npath=%s<pre>", path);
+	write(fd, buf_out, n2);
+
+	write(fd, buf_in, nread);
+out:
 	close(fd);
 }
