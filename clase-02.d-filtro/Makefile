@@ -1,6 +1,6 @@
-# $Id: Makefile,v 1.4 2005/04/08 20:59:01 jjo Exp $
+# $Id: Makefile,v 1.5 2006/03/28 13:22:08 jjo Exp $
 CFLAGS=-g -Wall
-TARGETS=filtro filtro_stdio rot13
+TARGETS=filtro rot13
 
 all: $(TARGETS)
 
@@ -10,9 +10,6 @@ all: $(TARGETS)
 #
 # $(@) se reemplaza por el "target", $(^) por todas las dependencias
 filtro: filtro.o convertir.o
-	$(CC) $(LDFLAGS) -o $(@) $(^) $(LDLIBS)
-
-filtro_stdio: filtro_stdio.o convertir.o
 	$(CC) $(LDFLAGS) -o $(@) $(^) $(LDLIBS)
 
 # simple test
