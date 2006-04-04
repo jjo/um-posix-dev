@@ -8,7 +8,7 @@ const char *progname;
 
 void help(void)
 {
-	fprintf(stderr, "ERROR: uso %s <0-3> <archivo> \n", progname);
+	fprintf(stderr, "ERROR: uso %s <1-4> <archivo> \n", progname);
 }
 int main(int argc, char * const argv[])
 {
