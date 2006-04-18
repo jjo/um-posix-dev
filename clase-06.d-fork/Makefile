@@ -1,5 +1,5 @@
 CFLAGS=-Wall -g
-TARGET=test-fork1 test-fork2 test-fork3
+TARGET=test-fork1 test-fork2 test-fork3 test-fork4
 
 all: $(TARGET)
 
@@ -14,4 +14,4 @@ test-fork3: test-fork3.o servicio.o
 
 
 clean:  
-	rm -f *.o *~ $(TARGET) core 
+	rm -f *.o *~ $(TARGET) core salida.txt
