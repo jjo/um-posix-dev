@@ -1,4 +1,4 @@
-/* $Id: hilos-1.c,v 1.7 2004/09/10 16:55:35 jjo Exp $ */
+/* $Id: hilos-1.c,v 1.8 2006/04/24 21:03:07 jjo Exp $ */
 /*
  * Objetivo: POSIX threads: Mostrar la creación de threads y la espera de finalización
  * 
@@ -80,7 +80,7 @@ void * hilo(void *arg)
 	struct hilo_arg *ha=arg;
 	tid=pthread_self();
 
-	n=snprintf(buf,sizeof(buf),"tid=%ld \n", (long)tid);
+	n=snprintf(buf,sizeof(buf),"tid=0x%lx \n", (long)tid);
 	write(STDOUT_FILENO, buf, n);
 	
 	for (i=0;i<ha->n_iter;i++) {

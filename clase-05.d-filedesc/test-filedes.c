@@ -1,4 +1,4 @@
-/* $Id: test-filedes.c,v 1.3 2005/06/03 17:36:15 jjo Exp $ */
+/* $Id: test-filedes.c,v 1.4 2006/04/24 21:03:06 jjo Exp $ */
 /*
  * Objetivo: Mostrar la utilizacio'n de descriptores de archivo (fd) mediante
  *           open(), dup(), dup2()
@@ -58,6 +58,8 @@ int main(int argc, char * const argv[])
 		perror("dup2(fdbak)");
 		return 2;
 	}
+	close(fd);
+	close(fdbak);
 	printf("Es e'ste mi standard output original ? \n");
 	return 0;
 }

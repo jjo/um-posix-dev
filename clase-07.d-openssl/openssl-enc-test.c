@@ -1,4 +1,4 @@
-/* $Id: openssl-enc-test.c,v 1.2 2005/06/03 18:25:07 jjo Exp $ */
+/* $Id: openssl-enc-test.c,v 1.3 2006/04/24 21:03:06 jjo Exp $ */
 /*
  * Author: JuanJo Ciarlante <jjo@um.edu.ar>, basado en documentacion de
  * www.openssl.org
@@ -27,8 +27,8 @@ unsigned char IV[]= { "01234567" };	/* para CBC mode */
 
 int main(int argc, char * const argv[])
 {
-	char inbuf[BLOCK_SIZE+EVP_MAX_IV_LENGTH];
-	char outbuf[BLOCK_SIZE+EVP_MAX_IV_LENGTH];
+	u_int8_t inbuf[BLOCK_SIZE+EVP_MAX_IV_LENGTH];
+	u_int8_t outbuf[BLOCK_SIZE+EVP_MAX_IV_LENGTH];
 	int ilen, olen;
 	int do_enc;
 	/*

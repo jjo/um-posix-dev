@@ -54,7 +54,7 @@ int main(int argc, const char *argv[]) {
 		tv.tv_usec= 0;
 
 		/* llamada a select() */
-		ERRSYS( nselect=select (1024, &rfds, &wfds, &efds, &tv) );
+		ERRSYS( nselect=select (FD_SETSIZE, &rfds, &wfds, &efds, &tv) );
 
 		/* nselect==0 => ningu'n descriptor listo: timeout */
 		if (nselect==0) {

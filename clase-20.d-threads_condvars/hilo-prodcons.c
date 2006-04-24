@@ -1,5 +1,5 @@
 /* 
- * $Id: hilo-prodcons.c,v 1.4 2005/02/21 20:17:39 jjo Exp $
+ * $Id: hilo-prodcons.c,v 1.5 2006/04/24 21:03:07 jjo Exp $
  * Autor: JuanJo Ciarlante <jjo@um.edu.ar>
  * Licencia: GPLv2
  *
@@ -24,7 +24,7 @@ void *producer(void *);
 sem_t SemaCantMsgProcesados;
 int main(int argc, const char *argv[])
 {
-	unsigned n_consumers, n_mensajes, i;
+	int n_consumers, n_mensajes, i;
 	pthread_t tid_cons, tid_prod;
 
 	parse_args_or_die(argc, argv, &n_mensajes, &n_consumers);
@@ -37,7 +37,7 @@ int main(int argc, const char *argv[])
 	pthread_create(&tid_prod, NULL, producer, (void*)n_mensajes);
 	pthread_join(tid_prod, NULL);
 
-	while(n_mensajes--);
+	while(n_mensajes--)
 		sem_wait(&SemaCantMsgProcesados);
 	lista_destroy(LaLista);
 	printf("Saliendo...\n");
@@ -50,8 +50,7 @@ void *producer(void *arg) {
 	for (i=0;i<n_mensajes;i++) {
 		printf("producer: i=%d\n", i);
 		m=malloc(sizeof *m);
-		mensaje_init(m);
-		m->num=i;
+		mensaje_init(m, i);
 		lista_put(LaLista, m);
 	}
 	return NULL;

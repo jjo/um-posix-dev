@@ -1,5 +1,6 @@
 #include <unistd.h>
 #include <stdio.h>
+#include <unistd.h>
 #include <fcntl.h>	/* open() */
 #include <sys/stat.h>	/* umask() */
 #include "libopen.h"

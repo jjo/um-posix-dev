@@ -1,5 +1,5 @@
 /*
- * $Id: lista-condvar.c,v 1.1 2004/10/22 22:24:02 jjo Exp $
+ * $Id: lista-condvar.c,v 1.2 2006/04/24 21:03:07 jjo Exp $
  * Autor: JuanJo Ciarlante <jjo@um.edu.ar>
  * Licencia: GPLv2
  *
@@ -18,15 +18,13 @@ struct lista {
 	pthread_mutex_t l_lock;	/* protege modif de la lista */
 	pthread_cond_t l_cond;	/* para dormir/despertar */
 };
-void mensaje_init(struct mensaje *m) 
+void mensaje_init(struct mensaje *m, int num) 
 {
-	m->num=0;
+	m->num=num;
 }
-struct lista *lista_new(int elem_max)
+struct lista *lista_new()
 {
 	struct lista *l=malloc(sizeof *l);
-	if (elem_max)
-		fprintf(stderr, "WARNING: elem_max NO implementado para en " __FILE__ "\n");
 	memset(l, 0, sizeof *l);
 	pthread_mutex_init(&l->l_lock, NULL);
 	pthread_cond_init(&l->l_cond, NULL);

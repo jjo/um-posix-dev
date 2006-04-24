@@ -1,4 +1,4 @@
-/* $Id: hilos-2-mutex.c,v 1.2 2004/10/01 22:05:14 jjo Exp $ */
+/* $Id: hilos-2-mutex.c,v 1.3 2006/04/24 21:03:07 jjo Exp $ */
 /*
  * Author: JuanJo Ciarlante <jjo@um.edu.ar>
  *
@@ -22,11 +22,11 @@
 #include <pthread.h>
 #include <semaphore.h>
 
-/* variable global "sincronizada" */
-struct {
+/* variable "sincronizada" */
+struct sincro_var_t {
 	int entero;
 	pthread_mutex_t mutex;
-} LA_Variable;
+};
 
 void usage(int, int);
 #define MAX_HILOS 100
@@ -39,9 +39,10 @@ int do_sync=1;
 
 /* DATA para la funcion del thread */
 struct hilo_arg {
-	int num;
+	int num_hilo;
 	int n_iter;
 	sem_t *sem_arranquep;
+	struct sincro_var_t *var;
 };
 
 /* FUNCION del thread */
@@ -50,25 +51,24 @@ void * hilo(void *arg)
 	int i,n;
 	char buf[256];
 	int a;
-	struct hilo_arg *ha=arg;
+	struct hilo_arg *hilo_arg=arg;
 	
-	if (sem_wait(ha->sem_arranquep)) {
+	if (sem_wait(hilo_arg->sem_arranquep)) {
 		perror("hilo: sem_wait()");
 		pthread_exit(NULL);
 	}
-	for (i=0;i<ha->n_iter;i++) {
-		if (do_sync) {
-			pthread_mutex_lock(&LA_Variable.mutex);
-		}
-		a=LA_Variable.entero;
+	for (i=0;i<hilo_arg->n_iter;i++) {
+		if (do_sync) pthread_mutex_lock(&hilo_arg->var->mutex);
+
+		a=hilo_arg->var->entero;
 		a++;
-		n=snprintf(buf,sizeof(buf),"%02d-\b\b\b", ha->num);
+		n=snprintf(buf,sizeof(buf),"%02d\b\b", hilo_arg->num_hilo);
 		write(STDOUT_FILENO, buf, n);
-		LA_Variable.entero=a;
-		if (do_sync) {
-			pthread_mutex_unlock(&LA_Variable.mutex);
-		}
+		hilo_arg->var->entero=a;
+
+		if (do_sync) pthread_mutex_unlock(&hilo_arg->var->mutex);
 	}
+	free(hilo_arg); /* libero memoria corresp. al argumento pasado */
 	pthread_exit(NULL);
 }
 int main(int argc, char **argv) 
@@ -78,9 +78,10 @@ int main(int argc, char **argv)
 	/* para guardar todos los ID de threads (opcional) */
 	pthread_t hilos[MAX_HILOS];
 	/* ... y los DATA de c/thread */
-	struct hilo_arg hilo_args[MAX_HILOS];
+	struct hilo_arg *hilo_arg;
 	char name[10];
 	sem_t sem_arranque;
+	struct sincro_var_t mivar;
 
 	int n_hilos;   /* cant de hilos a lanzar */
 	int n_iter;    /* cant de iteraciones de c/hilo */
@@ -98,7 +99,9 @@ int main(int argc, char **argv)
 	argc-=(optind-1);
 	argv+=(optind-1);
 	if (argc!=3) {
-		fprintf(stderr, "ERROR: uso: %s [-n]  n_hilos n_iter \n", argv[0]);
+		fprintf(stderr, "ERROR: uso: %s [-n]  n_hilos n_iter \n\n"
+				"       ej:  %s    10 1000\n"
+				"            %s -n 10 1000\n", argv[0], argv[0], argv[0]);
 		return 255;
 	}
 	if (    (n_hilos=atoi(argv[1])) <= 0  || n_hilos > MAX_HILOS ||
@@ -110,24 +113,28 @@ int main(int argc, char **argv)
 				do_sync, n_hilos, n_iter);
 	
 	sem_init(&sem_arranque, 0, 0);
-	if (do_sync) {
-		pthread_mutex_init(&LA_Variable.mutex, NULL);
-	}
+
+	mivar.entero=0;
+	if (do_sync) pthread_mutex_init(&mivar.mutex, NULL);
 
 	/* lanzado de los threads */
 	fprintf(stderr, "n_hilos=%d\n", n_hilos);
-	LA_Variable.entero=0;
 	printf("\ntotal = %d (%d*%d)\n", n_hilos*n_iter, n_hilos, n_iter);
 	for (i=0; i<n_hilos;i++) {
-		hilo_args[i].num=i;
 		sprintf(name, "\r%02d", i);
-		hilo_args[i].sem_arranquep=&sem_arranque;
-		hilo_args[i].n_iter=n_iter;
-		if (pthread_create(&hilos[i], NULL, hilo, (void*)&hilo_args[i]))
+		hilo_arg=malloc (sizeof *hilo_arg);
+		if (!hilo_arg) { perror("malloc");exit (1); }
+		hilo_arg->num_hilo=i;
+		hilo_arg->sem_arranquep=&sem_arranque;
+		hilo_arg->n_iter=n_iter;
+		hilo_arg->var=&mivar;
+		if (pthread_create(&hilos[i], NULL, hilo, (void*)hilo_arg)) {
 			perror("pthread_create()");
+			exit(1);
+		}
 	}
 	fprintf(stderr, "%d hilos creados... esperando Enter->", n_hilos);
-	getchar();write(STDOUT_FILENO,"\n",1);
+	getchar();fputs("", stdout);
 	for (i=0; i<n_hilos;i++) {
 		sem_post(&sem_arranque);
 	}
@@ -138,7 +145,7 @@ int main(int argc, char **argv)
 		while(pthread_join(hilos[i], NULL));
 	}
 
-	printf("\ntotal'= %d\n", LA_Variable.entero);
+	printf("\ntotal'= %d\n", mivar.entero);
 	return 0;
 }
 void usage(int h, int i) {

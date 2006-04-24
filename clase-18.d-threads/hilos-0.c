@@ -1,4 +1,4 @@
-/* $Id: hilos-0.c,v 1.4 2004/10/01 20:06:35 jjo Exp $ */
+/* $Id: hilos-0.c,v 1.5 2006/04/24 21:03:07 jjo Exp $ */
 /*
  * Objetivo: POSIX threads: Mostrar la creación de threads y la espera de finalización
  * 
@@ -68,7 +68,7 @@ void * hilo(void *arg)
 /*%%*/	tid=pthread_self();	/* pthread_self: devuelve el THREAD ID */
 
 	usleep(random()%20000);
-	n=snprintf(buf,sizeof(buf),"tid=%ld arg=%d\n", (long)tid, *(int*)arg);
+	n=snprintf(buf,sizeof(buf),"tid=0x%lx arg=%d\n", (long)tid, *(int*)arg);
 	write(STDOUT_FILENO, buf, n);
 /*%%*/	pthread_exit(NULL);	/* pthread_exit: termina y retorna exit_val */
 }

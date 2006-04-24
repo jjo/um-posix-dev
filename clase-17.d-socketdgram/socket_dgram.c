@@ -16,7 +16,7 @@ int main(void)
 {
 	int sockfd;
 	struct sockaddr_in addr_r, addr_w;
-	int addrlen_r, addrlen_w;
+	size_t addrlen_r, addrlen_w;
 	struct ip_mreq imr;
 	char buf[1024];
 	int nbuf;
