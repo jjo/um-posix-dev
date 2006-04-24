@@ -1,5 +1,5 @@
 /*
- * $Id: test-fork2.c,v 1.3 2004/08/20 21:22:13 jjo Exp $
+ * $Id: test-fork2.c,v 1.4 2006/04/24 20:49:09 jjo Exp $
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -9,7 +9,6 @@
 #include "servicio.h"
 int main(int argc, char *const argv[])
 {
-	int ret;
 	int fd;
 
 	fd=open("salida.txt", O_CREAT|O_TRUNC|O_RDWR, 0666);
@@ -18,14 +17,14 @@ int main(int argc, char *const argv[])
 		return 1;
 	}
 	/* el valor de retorno depende del si es padre o hijo */
-	switch( (ret=fork()) ) {
+	switch( (fork()) ) {
 		case -1:	/* error */
 			perror("fork()");
 			return 1;
 		case 0:		/* hijo */
-			servicio(fd);
+			servicio_sec(fd, 1);
 			break;
 	}
-	printf("Saliendo...");
+	puts("Saliendo...\n");
 	return 0;
 }

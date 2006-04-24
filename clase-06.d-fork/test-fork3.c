@@ -1,5 +1,5 @@
 /*
- * $Id: test-fork3.c,v 1.2 2004/08/20 21:22:13 jjo Exp $
+ * $Id: test-fork3.c,v 1.3 2006/04/24 20:49:09 jjo Exp $
  *
  * Como test-fork2.c pero mas prolijo: 
  * 	- el hijo no muestra "Saliendo" (return 0 al main)
@@ -24,12 +24,12 @@ int main(int argc, char *const argv[])
 		return 1;
 	}
 	/* el valor de retorno depende del si es padre o hijo */
-	switch( (ret=fork()) ) {
+	switch( (fork()) ) {
 		case -1:	/* error */
 			perror("fork()");
 			return 1;
 		case 0:		/* hijo */
-			servicio_seg(fd, 1); /* 1 segundo */
+			servicio_sec(fd, 1); /* 1 segundo */
 			return 0;
 	}
 	/* deberi'amos ver si wait() retorna error (-1) ... */

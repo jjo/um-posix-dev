@@ -1,5 +1,4 @@
 /*
- * $Id: servicio.h,v 1.3 2003/05/02 20:34:14 jjo Exp $
+ * $Id: servicio.h,v 1.4 2006/04/24 20:49:09 jjo Exp $
  */
-int servicio(int fd);
-int servicio_seg(int fd, int segundos);
+int servicio_sec(int fd, int segundos);

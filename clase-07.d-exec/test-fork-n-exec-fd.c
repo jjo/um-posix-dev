@@ -6,6 +6,7 @@
 
 int main(void) {
 	int status;
+	pid_t pid_hijo;
 	int fd;
 	if ((fd=open("Makefile", O_RDONLY, 0))< 0) {
 		perror("Makefile");
@@ -24,8 +25,8 @@ int main(void) {
 			printf("*** luego del exec()\n");
 			return 255;	/* error si llega aqui =) */
 	}
-	wait (&status);
-	printf("*** Saliendo ...\n");
+	pid_hijo=wait (&status);
+	printf("*** Saliendo (pid_hijo=%d)...\n", pid_hijo);
 	if (WIFEXITED(status))
 		printf("*** status=%d\n", WEXITSTATUS(status));
 	return 0;
