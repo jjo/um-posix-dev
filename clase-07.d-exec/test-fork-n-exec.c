@@ -1,4 +1,4 @@
-/* $Id: test-fork-n-exec.c,v 1.3 2006/04/24 20:53:04 jjo Exp $ */
+/* $Id: test-fork-n-exec.c,v 1.4 2006/05/01 21:57:24 jjo Exp $ */
 #include <stdio.h>
 #include <unistd.h>
 #include <sys/wait.h>
@@ -11,6 +11,7 @@ int main(void) {
 			perror("fork()");
 			return 1;
 		case 0:	/* hijo */
+			//kill(getpid(),9);
 			execlp("ls", "ls", "-al", NULL);
 			printf("*** luego del exec()\n");
 			return 255;	/* error si llega aqui =) */
@@ -19,6 +20,9 @@ int main(void) {
 	printf("*** Saliendo (pid_hijo=%d)...\n", pid_hijo);
 	if (WIFEXITED(status))
 		printf("*** status=%d\n", WEXITSTATUS(status));
+	else if (WIFSIGNALED(status))
+		printf("*** signaled signal=%d\n", WTERMSIG(status));
+
 	return 0;
 }
 
