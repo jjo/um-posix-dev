@@ -1,0 +1,20 @@
+TP2 - 2006
+==========
+
+Enunciado
+---------
+Dado el archivo cifrado "crackeame.dat" con el algoritmo AES-128
+(Advanced Encryption Standard , 128 bits), encontrar la clave
+de cifrado tal que:
+
+. El texto cifrado es una frase de Ghandi
+. La clave de cifrado es una palabra "de diccionario",
+existe en el archivo `/usr/share/dict/words`.
+. Uso:
+------------------------------------------------
+$ ./tp2 -n <n_hijos> salida.txt crackeame.dat /usr/share/dict/words [/otro/archivo/diccionario ...]
+------------------------------------------------
+. Requerimientos de implementación:
+.. La función de crack está se ejecuta en cada hijo
+.. El exit_status del main() (padre) debe reflejar si se pudo obtener la 
+clave de cifrado
