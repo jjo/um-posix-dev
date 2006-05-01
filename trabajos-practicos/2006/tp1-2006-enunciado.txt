@@ -1,0 +1,22 @@
+TP1 - 2006
+==========
+
+Enunciado
+---------
+Desarrollar una aplicacion de cifrado/descifrado (sin importar su "potencia"
+criptográfica) que se comporte como un filtro ( stdin->stdout).
+
+
+. Cifrado (-e) con la clave (-k ...)
+------------------------------------------------
+$ ./tp1 -e -k "laClave" < arch.txt > cifrado.dat
+------------------------------------------------
+
+Donde: cifrado.dat no tiene que mostrar claramente el contenido de arch.txt.
+
+. Descifrado (-d) con la clave (-k ...)
+------------------------------------------------
+$ ./tp1 -d -k "laClave" < cifrado.dat > arch2.txt
+------------------------------------------------
+   
+Finalmente: arch.txt y arch2.txt deben ser iguales.

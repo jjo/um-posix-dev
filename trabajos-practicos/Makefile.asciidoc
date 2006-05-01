@@ -1,0 +1,10 @@
+TXTs=$(wildcard *.txt)
+HTMLs=$(TXTs:.txt=.html)
+
+all : $(HTMLs)
+
+%.html: %.txt
+	asciidoc $^
+
+clean:
+	rm -fv $(HTMLs)
