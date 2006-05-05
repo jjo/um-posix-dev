@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <unistd.h>
+#include <string.h>
 #include "libcifrado.h"
 
 #define BLOCK_SIZE 1024
