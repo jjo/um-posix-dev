@@ -30,15 +30,31 @@ int libcifrado_free(EVP_CIPHER_CTX *ctx_p)
 	free(ctx_p);
 	return ret;
 }
-int libcifrado_bloque(EVP_CIPHER_CTX* ctx_p, int8_t *outbuf, int *olen, int8_t *inbuf, int ilen)
+int libcifrado_bloque_update(EVP_CIPHER_CTX* ctx_p, int8_t *outbuf, int *olen, int8_t *inbuf, int ilen)
 {
 	int ret=EVP_CipherUpdate(ctx_p, (u_int8_t*) outbuf, olen, (u_int8_t*) inbuf, ilen);
-	if(!ret) fprintf(stderr, "ERROR: EVP_CipherUpdate olen=%d, ilen=%d\n", *olen, ilen);
+	//if(!ret) fprintf(stderr, "ERROR: EVP_CipherUpdate olen=%d, ilen=%d\n", *olen, ilen);
 	return ret;
 }
 int libcifrado_bloque_final(EVP_CIPHER_CTX* ctx_p, int8_t *outbuf, int *olen)
 {
 	int ret=EVP_CipherFinal(ctx_p, (u_int8_t*) outbuf, olen);
-	if (!ret) fprintf(stderr, "ERROR: EVP_CipherFinal olen=%d\n", *olen);
+	//if (!ret) fprintf(stderr, "ERROR: EVP_CipherFinal olen=%d\n", *olen);
 	return ret;
+}
+int libcifrado_bloque(EVP_CIPHER_CTX* ctx_p, int8_t *buf, int buflen)
+{
+	char local_buf[4096];
+	int olen;
+	int ret;
+	int n;
+	ret=libcifrado_bloque_update(ctx_p, local_buf, &olen, buf, buflen);
+	if (!ret) return ret;
+	n=olen;
+	memcpy(buf, local_buf, olen);
+	ret=libcifrado_bloque_final(ctx_p, local_buf, &olen);
+	if (!ret) return ret;
+	n+=olen;
+	memcpy(buf, local_buf, olen);
+	return olen;
 }
