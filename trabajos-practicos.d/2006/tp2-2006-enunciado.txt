@@ -27,7 +27,7 @@ A modo informativo: el archivo `/usr/share/dict/words` se cortó en
 -----------------------------------------------
 # cd /usr/share/dict
 # wc -l < words                   ##para obtener la cant. de lineas
-# echo $((`wc -l words`/4))       ##cant. de lineas /4
+# echo $((`wc -l words`/4+1))     ##cant. de lineas /4 (+1)
 # NUM_LIN=$((`wc -l words`/4+1))  ##lo asignamos (en vez de mostrarlo)
 # split -d -l $NUM_LIN -a1 words words.parte  ##lo partimos en pedazos de $NUM_LIN líneas
 -----------------------------------------------
