@@ -6,7 +6,7 @@
 #include <sys/wait.h>
 
 /* variable global para poder leerla en el handler */
-int i;
+volatile int i;
 
 /* funcion simple para lanzar un hijo ... */
 void lanza_hijo(void)

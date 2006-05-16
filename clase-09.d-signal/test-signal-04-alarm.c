@@ -1,10 +1,9 @@
 /* 
- * $Id: test-signal-04-alarm.c,v 1.4 2003/05/16 21:13:50 jjo Exp $
+ * $Id: clase-09.d-signal/test-signal-01-catch.c git 2006-05-16 00:14:13.000000000 -0300 jjo Exp $
  */
 
-/* 
-#define _POSIX_SOURCE 
-*/
+//#define _POSIX_SOURCE 
+
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>

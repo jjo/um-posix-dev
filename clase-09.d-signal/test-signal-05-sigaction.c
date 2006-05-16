@@ -1,5 +1,5 @@
 /* 
- * $Id: test-signal-05-sigaction.c,v 1.3 2004/06/11 21:40:48 jjo Exp $
+ * $Id: clase-09.d-signal/test-signal-01-catch.c git 2006-05-16 00:14:13.000000000 -0300 jjo Exp $
  */
 
 #include <stdio.h>
@@ -11,16 +11,14 @@ void handler(int signum) {
 	fprintf(stderr, "OUch sig=%d\n", signum);
 }
 void handler_siginfo(int signum, siginfo_t *si, void *data) {
-	const char *who;
+	const char *who="<none>";
 	switch(si->si_code) { 
 		case SI_USER: who="user";break;
 		case SI_KERNEL: who="kernel";break;
-		default: who="<nocontemplado>";break;
 	}
-	fprintf(stderr, "OUch sig=%d si_code=%d who=%s\n",
-			si->si_signo, si->si_code, who);
-	
+	fprintf(stderr, "OUch sig=%d si_code=%d who=%s\n", si->si_signo, si->si_code, who);
 }
+
 int main(void) 
 {
 	struct sigaction sa;

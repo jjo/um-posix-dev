@@ -1,5 +1,5 @@
 /* 
- * $Id: test-signal-01-catch.c,v 1.5 2004/06/11 21:40:48 jjo Exp $
+ * $Id: clase-09.d-signal/test-signal-01-catch.c git 2006-05-16 00:14:13.000000000 -0300 jjo Exp $
  */
 
 //#define _POSIX_SOURCE 
