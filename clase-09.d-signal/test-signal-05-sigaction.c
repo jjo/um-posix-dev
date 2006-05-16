@@ -16,13 +16,13 @@ void handler_siginfo(int signum, siginfo_t *si, void *data) {
 		case SI_USER: who="user";break;
 		case SI_KERNEL: who="kernel";break;
 	}
-	fprintf(stderr, "OUch sig=%d si_code=%d who=%s\n", si->si_signo, si->si_code, who);
+	fprintf(stderr, "(mipid=%d) OUch sig=%d si_code=%d who=%s\n", getpid(), si->si_signo, si->si_code, who);
 }
 
 int main(void) 
 {
 	struct sigaction sa;
-#if 0
+#if 1
 	sa.sa_flags= SA_RESTART;
 	sa.sa_handler=handler;
 #else
@@ -32,6 +32,7 @@ int main(void)
 	sigemptyset(&sa.sa_mask);
 	sigaction(SIGINT, &sa, NULL);
 	getchar();
+	puts("Saliendo...");
 	return 0;
 }
 

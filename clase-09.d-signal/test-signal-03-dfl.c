@@ -18,5 +18,6 @@ int main(void)
 {
 	signal(SIGINT, handler); /* deberiamos usar sigaction() */
 	getchar();
+	puts("Saliendo...");
 	return 0;
 }

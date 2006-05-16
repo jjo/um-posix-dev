@@ -15,8 +15,9 @@ void handler(int signum) {
 }
 int main(void) 
 {
-	alarm(1);
 	signal(SIGALRM, handler); /* deberiamos usar sigaction() */
+	alarm(1);
 	getchar();
+	puts("Saliendo...");
 	return 0;
 }
