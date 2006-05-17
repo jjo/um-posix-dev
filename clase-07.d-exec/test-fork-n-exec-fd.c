@@ -21,7 +21,7 @@ int main(void) {
 			perror("fork()");
 			return 1;
 		case 0:	/* hijo */
-			execlp("cat", "cat", NULL);
+			execlp("cat", "cat", (char*)NULL);
 			printf("*** luego del exec()\n");
 			return 255;	/* error si llega aqui =) */
 	}

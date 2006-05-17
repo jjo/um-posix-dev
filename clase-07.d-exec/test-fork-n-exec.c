@@ -12,7 +12,7 @@ int main(void) {
 			return 1;
 		case 0:	/* hijo */
 			//kill(getpid(),9);
-			execlp("ls", "ls", "-al", NULL);
+			execlp("ls", "ls", "-al", (char*)NULL);
 			printf("*** luego del exec()\n");
 			return 255;	/* error si llega aqui =) */
 	}
