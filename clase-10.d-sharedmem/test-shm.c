@@ -35,7 +35,7 @@ char *shm_abre_y_attachea(key_t key, size_t size, mode_t mode)
 	return ptr;
 }
 void usage(FILE *f, int exit_status) {
-	fprintf(f, "ERROR: uso %s {-r|-w} id\n", progname);
+	fprintf(f, "ERROR: uso %s {-r|-w} key\n", progname);
 	exit(exit_status);
 }
 int main(int argc, char * const argv[])
@@ -70,7 +70,7 @@ int main(int argc, char * const argv[])
 	if (opt_write) {
 		/* opcion -w: escribe en memoria */
 		int resto=MEMSIZE-1;	/* lugar para el '\0' */
-		fprintf(stderr, "Leyendo de stdin ...resto\n");
+		fprintf(stderr, "Leyendo de stdin ...\n\n");
 		/* 
 		 * consume el stdin, dejando su contenido
 		 * DIRECTAMENTE en ptr
@@ -89,7 +89,7 @@ int main(int argc, char * const argv[])
 		
 	} else if(opt_read) {
 		/* opcion -r: lee desde memoria */
-		fprintf(stderr, "Escribiendo en stdout ...\n");
+		fprintf(stderr, "Escribiendo en stdout ...\n\n");
 		puts(ptr);
 	}
 	return 0;
