@@ -16,23 +16,25 @@ int fprintf_ip(FILE *f, struct sockaddr_in *addr_in) {
 	return fprintf(stderr, "IP=%s\n", ip_buf);
 }
 /* emula inet_aton *pero* permitiendo resolver nombres -> ip*/
-int inet_aton_hname(const char *cp, struct in_addr *inp)
+int inet_aton_hname(const char *hname, struct in_addr *inp)
 {
 
+	int ret;
 	const struct addrinfo hint = 
 		{ .ai_flags=0, .ai_family=AF_INET, .ai_socktype=0, .ai_protocol=0 };
 	struct addrinfo *addrinfo_p;
 
 	/* Usamos getaddrinfo en vez del (obsoleto) gethostbyname */
-	if ((getaddrinfo(cp, NULL, &hint, &addrinfo_p))==0) {
+	if ((ret=getaddrinfo(hname, NULL, &hint, &addrinfo_p))==0) {
 		struct sockaddr_in *addr_in=(struct sockaddr_in*)addrinfo_p->ai_addr;
 		memcpy(inp, &addr_in->sin_addr, sizeof (addr_in->sin_addr));
 
+		freeaddrinfo(addrinfo_p);
 		return 1;
 	} else {
-		fprintf(stderr, "error en gethostbyname(\"%s\"): %s\n",
-				cp,
-				hstrerror(h_errno));
+		fprintf(stderr, "error en getaddrinfo(\"%s\"): %s\n",
+				hname,
+				gai_strerror(ret));
 	}
 	return 0;
 }
