@@ -64,7 +64,7 @@ int main(int argc, char * const argv[])
 	key=atoi(argv[1]);
 	if (key<0)   { ouch="key invalido";goto err;}
 
-	ptr=shm_abre_y_attachea(key, MEMSIZE, 0666 | (opt_write? IPC_CREAT : 0));
+	ptr=shm_abre_y_attachea(key, MEMSIZE, 0644 | (opt_write? IPC_CREAT : 0));
 	if (!ptr)    { ouch="obtener memoria compartida";goto err;}
 	
 	if (opt_write) {

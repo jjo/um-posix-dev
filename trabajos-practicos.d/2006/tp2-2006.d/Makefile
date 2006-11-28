@@ -1,5 +1,5 @@
 CFLAGS=-g -Wall
-OBJETIVOS=test-cifrador tp2
+OBJETIVOS=test-cifrador tp2-monoproc
 LDLIBS=-lssl
 
 all : $(OBJETIVOS)

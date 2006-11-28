@@ -43,11 +43,12 @@ int main(int argc, const char *argv[])
 	/* 
 	 * Por si quedo' semi-cerrado recie'n: fuerzo reuso
 	 */
+#if 1+NO_USAR_SETSOCKOPT
 	opt = 1;
 	if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, (char *) &opt, sizeof(opt))<0) {
 		perror("setsockopt()");return 1;
 	}
-
+#endif
 	/* 
 	 * bind(): me ligo a un address:port 
 	 */

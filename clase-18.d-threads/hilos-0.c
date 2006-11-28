@@ -24,7 +24,7 @@
 #include <pthread.h>
 
 #define N_HILOS 10
-#define SIN_BUG 0
+#define SIN_BUG 1
 
 void *hilo (void *arg);
 
@@ -38,6 +38,7 @@ int main(void)
 #endif
 
 	fprintf(stderr, "n_hilos=%d\n", N_HILOS);
+	srandom(time(NULL));
 
 	/* Bucle que lanzara' los threads */
 	for (i=0; i<N_HILOS;i++) {

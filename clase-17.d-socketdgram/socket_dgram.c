@@ -73,6 +73,7 @@ int main(void)
 			if (buf[nbuf]=='\n') continue;
 			fprintf(stderr, "** stdin -> red\n");
 
+			/* NOTAR: sendto() */
 			ERRSYS( cnt=sendto(sockfd, buf, nbuf+cnt, 0, 
 					(struct sockaddr *)&addr_w, addrlen_w));
 		}
@@ -80,6 +81,7 @@ int main(void)
 		/* recvfrom (sockfd, addr_r) -> write stdout */
 		if (FD_ISSET(sockfd, &rfds)) {
 
+			/* NOTAR: recvfrom() */
 			ERRSYS( cnt=recvfrom(sockfd, buf, sizeof(buf), 0, 
 					(struct sockaddr *)&addr_r, &addrlen_r));
 			if (cnt==0) { fprintf(stderr, "red: EOF\n"); break; }
