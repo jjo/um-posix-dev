@@ -2,6 +2,8 @@
 #include <string.h>
 #include <unistd.h>
 
+/* ... tan facil es en shell: tr '[a-zA-Z]' '[n-za-mN-ZA-M]'  8-) */
+
 int do_rot13(char a)
 {
 	char b;
