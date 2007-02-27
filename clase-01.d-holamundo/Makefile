@@ -18,3 +18,5 @@ clean:
 	@echo Limpiando ...
 	rm -fv $(TARGETS) *.o core
 
+-include ../doxygen/Makefile.dox
+-include ../splint/Makefile

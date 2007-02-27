@@ -22,3 +22,6 @@ test: filtro
 
 clean: 
 	rm -f *.o *~ $(TARGETS)
+
+-include ../doxygen/Makefile.dox
+-include ../splint/Makefile
