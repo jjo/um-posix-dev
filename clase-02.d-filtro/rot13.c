@@ -4,7 +4,7 @@
 
 /* ... tan facil es en shell: tr '[a-zA-Z]' '[n-za-mN-ZA-M]'  8-) */
 
-int do_rot13(char a)
+static int do_rot13(char a)
 {
 	char b;
 	return (a&64?(b=a&159)&&b<27?((b+12)%26+1)|(a&224):a:a);

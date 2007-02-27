@@ -5,7 +5,7 @@
 #include <unistd.h>
 #include "servicio.h"
 
-int servicio_sec(int fd, int sec)
+int servicio_sec(int fd, unsigned sec)
 {
 	sleep(sec);
 	printf("(HIJO despierto pid=%d) ", getpid());
