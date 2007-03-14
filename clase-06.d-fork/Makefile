@@ -15,3 +15,6 @@ test-fork3: test-fork3.o servicio.o
 
 clean:  
 	rm -f *.o *~ $(TARGET) core salida.txt
+-include ../doxygen/Makefile.dox
+-include ../splint/Makefile
+SPFLAGS+=-nullassign

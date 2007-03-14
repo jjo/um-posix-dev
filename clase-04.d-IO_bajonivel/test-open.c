@@ -6,7 +6,7 @@
 /**  Nombre del  "ejecutable", es decir: argv[0] pasado a main() */
 const char *progname;
 
-void help(void)
+static void help(void)
 {
 	fprintf(stderr, "ERROR: uso %s <1-4> <archivo> \n", progname);
 }

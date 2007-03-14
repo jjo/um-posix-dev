@@ -102,7 +102,7 @@ void servicio(int fd) {
 		perror("fdopen()");
 		exit(1);
 	}
-	fprintf(f,"Hola, aqui %s ...\ntipea y termina con 2 <Enters>\n",
+	fprintf(f,"Hola, aqui %s ...\ntipea' y termina con 2 <Enters>\n",
 			getlogin());
 	fflush(f);
 	while(fgets(str, sizeof(buf)-(str-buf), f)) {

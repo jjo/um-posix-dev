@@ -1,0 +1,263 @@
+UNIVERSIDAD DE MENDOZA – FACULTAD DE INGENIERIA
+
+   +------------------------------------------------------------------------+
+   | CARRERA (1)                        | ASIGNATURA (2)     | CODIGO (3)   |
+   |                                    |                    |              |
+   | (X)I.I. I.E.E. (X) I.C. I.E.T. B.  | Computacion II     | II21         |
+   |------------------------------------+--------------------+--------------|
+   | CURSO (4)                          | AREA (5)           | ULTIMA       |
+   |                                    |                    | REVISION     |
+   | 4                                  | C.B. T.B. T.A. Co. | (JuanJo v25) |
+   |---------------------------------------------------------+--------------|
+   | MATERIAS                                                |              |
+   | CORRELATIVAS:_____________________________________      |              |
+   |                                                         | ANO  LECTIVO |
+   | (7) _____________________________________               | 2007         |
+   |                                                         |              |
+   | _____________________________________                   |              |
+   +------------------------------------------------------------------------+
+
+   (8)
+
+   +------------------------------------------------------------------------+
+   | Profesor Titular:                         Carga Horaria Semanal: 4 Hs. |
+   | Profesor  Titular  Asociado:  Ing.  Juan  Carga Horaria Semanal:       |
+   | Jose Ciarlante                                                         |
+   | Profesor Adjunto: Ing. Daniel Quinteros   Carga Horaria Semanal:       |
+   | Profesor     J.T.P.:     Ing.     Carlos  Carga Horaria Semanal:       |
+   | Taffernaberry                                                          |
+   +------------------------------------------------------------------------+
+
+   (9)
+
+   +------------------------------------------------------------------------+
+   | Horas destinadas a Teoria:________________________Hs.                  |
+   | Horas destinadas a Practica:_______________________Hs.                 |
+   | Horas Teorico-practicas: 4 Hs.                                         |
+   +------------------------------------------------------------------------+
+
+   OBJETIVOS GENERALES (10):
+
+     * Adquirir dominio en las  herramientas de desarrollo de sistemas  POSIX
+       (Unix-like).
+
+     * Manejar  adecuadamente dichas  herramientas  para la  construccion  de
+       aplicaciones orientadas a networking con mecanismos de concurrencia
+
+     * Conocer y utilizar las bibliotecas mas comunes del entorno.
+
+     * Utilizar eficientemente las API de bajo nivel, de red y de creacion de
+       procesos e hilos
+
+   PROGRAMA ANALITICO (11):
+
+   CAPITULO I : El entorno POSIX
+
+   TEMA  A:  El  entorno  de  usuario:  1.A.1-  Sesion  de  usuario:  inicio,
+   operacion, finalizacion.  1.A.2- Personalizacion  del entorno.  1.A.3-  El
+   shell de  usuario. 1.A.4-  Entrada  y salida  estandar; salida  de  error.
+   1.A.5- Utilidades comunes para manejo de archivos y filtrado de texto.
+
+   TEMA B:  El entorno  de desarrollo:  1.B.1-Estandares ANSI,  POSIX, BSD  y
+   System  V.   1.B.2-  Generalidades   del  entorno.   1.B.3-  Creacion   de
+   aplicaciones:  edicion,   compilacion   y   enlace,   depuracion.   1.B.4-
+   Automatizacion con make. 1.B.5 - Estructura del proyecto: archivos fuente:
+   interface e implementacion.  1.B.6 Ubicacion de  archivos de encabezado  y
+   bibliotecas. 1.B.7 Secciones y paginas del manual (man) del programador.
+
+   CAPITULO II - API: entrada/salida (I/O)
+
+   TEMA A: Entrada/salida de  alto nivel: 2.A.1 -  ANSI C: relacion entre  el
+   lenguaje "C" y la biblioteca estandar.  2.A.2 - Diferencias con el API  de
+   bajo nivel. 2.A.3 - Funciones  mas comunes: apertura, lectura/escritura  y
+   posicionamiento de archivos.
+
+   TEMA B:  Entrada/salida  de  bajo  nivel:  2.B.1  -  Llamadas  al  sistema
+   operativo, interaccion con  el nucleo,  descriptores de  archivo. 2.B.2  -
+   Comparacion con funciones  de alto  nivel. 2.B.3 -  Apertura de  archivos:
+   flags de apertura, modos, permisos; relacion con umask. 2.B.4 - Lectura  y
+   escritura de archivos.  2.B.5 -  I/O avanzado: proyeccion  de archivos  en
+   memoria.
+
+   CAPITULO III: API: Procesos
+
+   TEMA A: Introduccion: 3.A.1 - Generalidades: concepto de proceso, relacion
+   con el nucleo. 3.A.2  Propiedades de un proceso:  PID, uid, gid,  entorno,
+   descriptores  de  archivo,  mapa  de  memoria.  3.A.3  -  Utilidades  para
+   administracion de procesos . 3.A.4 - Variables de entorno.
+
+   TEMA B: Creacion de procesos: 3.B.1 - Creacion de procesos, comportamiento
+   y flujo del programa (padre y hijo). 3.B.2 - Relacion proceso  padre/hijo:
+   memoria, archivos, entorno, senales, process ids, user/group ids. 3.B.3  -
+   Espera y recuperacion del estado de finalizacion de un proceso.
+
+   TEMA C:  Ejecucion de  programas:  3.C.1 -  Generalidades respecto  de  la
+   ejecucion de programas.  3.C.2 -  Llamadas y funciones  para ejecucion  de
+   programas; comportamiento  y  flujo  del  codigo  .  3.C.2  -  Propiedades
+   conservadas luego de la ejecucion.
+
+   TEMA D:  Senales: 3.D.1  -  Concepto de  senal,  relacion con  el  nucleo,
+   senales sincronas  y  asincronas. 3.D.2  -  Numeros y  nombres  de  senal,
+   condiciones informadas.  3.D.3  -  Disposicion de  las  senales:  ignorar,
+   interceptar o permitir la accion por defecto. 3.D.4 - Llamadas y funciones
+   para la intercepcion y bloqueo de senales. 3.D.5 - Envio de senales.
+
+   CAPITULO IV: API: sistema de archivos (FS)
+
+   TEMA A: Introduccion:  4.A.1 - Generalidades  sobre sistemas de  archivos,
+   estructura, inodos, archivos y directorios, enlaces. 4.A.2 - Llamadas para
+   obtencion  de  los  metadatos  de  archivos.  4.A.3  -  Llamadas  para  la
+   modificacion del propietario y  modos de archivos.  4.A.4 - Llamadas  para
+   modificar entradas de directorios: enlace, borrado, renombrado; lectura de
+   directorios. 4.A.5 Dispositivos especiales (caracter y bloque).
+
+   CAPITULO V: API: Comunicacion entre procesos (IPC)
+
+   TEMA A: Pipes: 5.A.1  - Pipes , llamadas  de bajo y alto  nivel . 5.A.2  -
+   FIFOs (named pipes).
+
+   TEMA B:  Colas de  mensajes:  5.B.1 -  Generalidades  y alcance.  5.B.2  -
+   Identificacion,  creacion  y  remocion.  5.B.3  -  Envio  y  recepcion  de
+   mensajes.
+
+   TEMA  C:   Semaforos:  5.C.1   -  Generalidades   y  alcance.   5.C.2.   -
+   Identificacion, creacion y  remocion. 5.C.3 -  Operaciones con  semaforos,
+   relacion con la finalizacion del proceso.
+
+   TEMA C: Segmentos de memoria compartida: 5.B.2 - Generalidades y  alcance.
+   5.C.2 - Identificacion,  creacion y remocion.  5.C.3 - Uso  de la  memoria
+   compartida, mapas de memoria privados y compartidos.
+
+   CAPITULO VI: API: Red
+
+   TEMA A: Introduccion:  6.A.1 -  Generalidades sobre los  sockets. 6.A.2  -
+   Familias de protocolos,  tipos de  sockets. 6.A.3 -  Creacion de  sockets,
+   apertura activa y pasiva. 6.A.4 - Direccionamiento.
+
+   TEMA  B:  INET  sockets:  6.B.1  -  Caracteristicas  y  alcance.  6.B.2  -
+   Protocolos, direcciones IP y  puertos. 6.B.3 -  Creacion y utilizacion  de
+   sockets AF_INET. 6.B.4 - Aplicaciones para servicios TCP/IP
+
+   TEMA B: UNIX sockets: 6.C.1 - Caracteristicas y alcance. 6.C.2 -  Creacion
+   y utilizacion de sockets AF_UNIX, socketpair.
+
+   CAPITULO VII: API: Hilos de ejecucion (threads)
+
+   TEMA A:  Introduccion: 7.A.1  - Generalidades  sobre hilos  de  ejecucion.
+   7.A.2 - Comparacion con procesos, ventajas y desventajas.
+
+   TEMA B: Uso  de hilos  de ejecucion: 7.B.1  - Creacion  y finalizacion  de
+   threads. 7.B.2  - Primitivas  de sincronizacion:  exclusion mutua,  espera
+   condicional.
+
+   CAPITULO VIII: API: Clustering
+
+   TEMA  A:  Introduccion:  8.A.1  -  Definicion  de  cluster;  ,modelos   de
+   clustering: migracion de procesos y API especifico. 8.A.2 - Comparacion de
+   acuerdo a complejidad, performance y portabilidad.
+
+   TEMA B: Migracion  de procesos: 8.B.1  - Introduccion y  alcance. 8.B.2  -
+   Criterios y condicionamientos. 8.B.3 - Ejemplos
+
+   TEMA  C:  APIs  de  clustering:   8.C.1  -  Introduccion,  comparacion   y
+   descripcion de las API disponibles. 8.C.2 - Ejemplos de uso
+
+   PROGRAMA DE EXAMEN (12):
+
+   BOLILLA 1: Capitulos 1,6
+
+  BOLILLA 2: Capitulos 2,8
+
+   BOLILLA 3: Capitulos 3,5
+
+   BOLILLA 4: Capitulos 4,6
+
+   BOLILLA 5: Capitulos 5,8
+
+   BOLILLA 6: Capitulos 6,2
+
+   BOLILLA 7: Capitulos 7,5
+
+   BOLILLA 8: Capitulos 8,4
+
+   BOLILLA 9: Capitulos 7,3
+
+   PROGRAMA DE TRABAJOS PRACTICOS (13):
+
+   Practico No 1: Creacion de un filtro stdin a stdout.
+
+   Practico No 2: Aplicacion de fork, exec y pipe.
+
+   Practico No 3: Sincronizacion con semaforos
+
+   Practico No 4: Programacion de un cliente o servicio TCP/IP con procesos
+
+   Practico No 5: Programacion de un cliente o servicio TCP/IP con hilos
+
+   Practico No 6: Programacion de aplicacion  de calculo intenso para su  uso
+   en un cluster
+
+   CONDICIONES PARA REGULARIZAR LA MATERIA y REGIMEN DE EVALUACION (14):
+
+   La materia se aprobara por medio de un examen final.
+
+   Para regularizar la materia el alumno debera:
+
+     * Asistir al 80% de las clases.
+
+     * Aprobar todos los trabajos practicos.
+
+   BIBLIOGRAFIA (15):
+
+     * Stevens,  Richard.  Advanced  Programming  in  the  UNIX  Environment.
+       Addison Wesley.
+
+     * Stevens, Richard. Unix Network Programming. Prentice Hall.
+
+     * Neil Matthew and Richard Stones et al. Professional Linux Programming.
+       Wrox.
+
+     * Wall, Kurt. Programacion en Linux con ejemplos. Prentice Hall - QUE.
+
+     * comp.lang.c Frequently Asked Questions
+       [1]http://www.eskimo.com/~scs/C-faq/top.html
+
+     * Manuales en castellano de Linux (Proyecto Lucas)
+       [2]http://lucas.hispalinux.es/Manuales-LuCAS
+
+     * The GNU C Library Manual
+       [3]http://www.gnu.org/manual/
+
+     * Programming UNIX Sockets in C FAQ
+       [4]http://www.developerweb.net/sock-faq/
+
+     * The Unix Programming Resources Page
+       [5]http://www.erlenstar.demon.co.uk/unix/
+
+     * The Linux Documentation Project.
+       [6]http://www.linuxdoc.org/
+
+   ESTRATEGIAS DIDACTICAS UTILIZADAS (16):
+
+   Exposiciones dialogadas, discusiones grupales, practicos de laboratorio.
+
+   RECURSOS DIDACTICOS UTILIZADOS (17):
+
+   Internet, medios informaticos, laboratorio.
+
+   ACTIVIDADES DE INVESTIGACION, EXTENSION Y/O PRODUCCION DE LA CATEDRA (18):
+
+     * Sitio publico con todos los fuentes y documentacion usados durante  el
+       dictado                 de                 la                 materia:
+       [7]http://www.um.edu.ar/pitagoras/src/Computacion-II/
+
+References
+
+   Visible links
+   1. http://www.eskimo.com/~scs/C-faq/top.html
+   2. http://lucas.hispalinux.es/Manuales-LuCAS
+   3. http://www.gnu.org/manual/
+   4. http://www.developerweb.net/sock-faq/
+   5. http://www.erlenstar.demon.co.uk/unix/
+   6. http://www.linuxdoc.org/
+   7. http://www.um.edu.ar/pitagoras/src/Computacion-II/

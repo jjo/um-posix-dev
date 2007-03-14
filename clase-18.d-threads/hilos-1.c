@@ -37,7 +37,7 @@ int main(int argc, const char *argv[])
 {
 	int i;
 	
-	/* para guardar todos los ID de threads (opcional) */
+	/* para guardar todos los ID de threads */
 	pthread_t hilos[MAX_HILOS];
 	/* ... y los DATA de c/thread */
 	struct hilo_arg hilo_args[MAX_HILOS];

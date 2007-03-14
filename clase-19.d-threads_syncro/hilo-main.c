@@ -34,7 +34,7 @@ struct var_protegida {
 
 int n_loops=0;	/* cant. de loops por thread */
 
-#define EXIT_IF(cond, msg)  do { if (cond) {perror(msg);exit(1);} } while(0);
+#define EXIT_IF(cond, msg)  do { if (cond) {perror(msg);exit(1);} } while(0)
 void *incr(void *);
 int main(int argc , char *argv[])
 {

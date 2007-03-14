@@ -13,3 +13,6 @@ test-fork-n-exec-fd: test-fork-n-exec-fd.o
 clean:  
 	rm -f *.o *~ $(TARGET) core archivo*txt
 
+-include ../doxygen/Makefile.dox
+-include ../splint/Makefile
+SPFLAGS+=-nullassign

@@ -12,9 +12,11 @@ TARGETS=holamundo holamundo_stdio
 # make construirá $(TARGETS) usando las reglas implícitas; en este
 # caso al encontrar <archivo>.c creará un ejecutable invocando el 
 # compilador (el cual a su vez llama al linker).
-todo: $(TARGETS)
+all: $(TARGETS)
 
 clean:
 	@echo Limpiando ...
 	rm -fv $(TARGETS) *.o core
 
+-include ../doxygen/Makefile.dox
+-include ../splint/Makefile

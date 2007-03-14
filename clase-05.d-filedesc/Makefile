@@ -11,3 +11,5 @@ clean:
 	rm -f *.o *~ $(TARGET) core archivo*txt
 
 -include ../doxygen/Makefile.dox
+-include ../splint/Makefile
+SPFLAGS+=-nullassign

@@ -51,7 +51,7 @@ int main(int argc, char * const argv[])
 		return 2;
 	}
 
-	ejecuto_cmd(cmd);
+	(void)ejecuto_cmd(cmd);
 
 	/* "Restauramos" el stdout anterior */
 	if (dup2(fdbak, STDOUT_FILENO) < 0) {
@@ -72,10 +72,10 @@ int ejecuto_cmd(const char *cmd)
 {
 	time_t curtime;		/* tiempo actual */
 	int status; 		/* status de terminacion del system() */
-	time(&curtime);
+	curtime=time(NULL);
 	printf("* COMIENZO -- %s\n", ctime(&curtime));
 	status=system(cmd);
-	time(&curtime);
+	curtime=time(NULL);
 	printf("* FIN      -- %s\n", ctime(&curtime));
 	return status;
 }

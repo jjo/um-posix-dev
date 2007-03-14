@@ -26,7 +26,7 @@ char *program_name;
 
 int opcion_b = 0;		/* -b           : opcion 'booleana' (flag) */
 int opcion_i = 0;		/* -i <entero>  : opcion integer */
-char * opcion_s = NULL;	/* -s <string>  : opcion string */
+char * opcion_s = NULL;	/* -s <string>  : opcion string *//*@null@*/
 
 int main(int argc, char * const argv[])
 {
@@ -57,7 +57,6 @@ int main(int argc, char * const argv[])
 			default:
 				fprintf(stderr, "opcion invalida: %c\n", c);
 				return 1;
-				break;
 		}
 	}
 	/*

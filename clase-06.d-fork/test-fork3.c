@@ -14,7 +14,7 @@
 #include "servicio.h"
 int main(int argc, char *const argv[])
 {
-	int ret;
+	pid_t ret;
 	int fd;
 	int status;
 

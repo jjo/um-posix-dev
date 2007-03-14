@@ -7,7 +7,7 @@
 
 int main(int argc, char *const argv[])
 {
-	int ret;
+	pid_t ret;
 
 	ret=fork();	/* el valor de retorno depende del si es padre o hijo */
 	if (ret==0) sleep(1);
