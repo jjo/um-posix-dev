@@ -37,8 +37,8 @@ int open_test(int num, const char *fname)
 	}
 	if (fd>=0) {
 		char buf[64]; int len;
+		buf[sizeof(buf)-1]=0;
 		len=snprintf(buf, sizeof (buf)-1, "Hola (num=%d)\n", num);
-		buf[len]=0;
 		write(fd, buf, len);
 	}
 	return fd;
